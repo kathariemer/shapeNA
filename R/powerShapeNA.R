@@ -1,4 +1,4 @@
-#' Compute tyler's shape estimate for incomplete data
+#' Computing M-Estimators of Shape for Data With Missing Values
 #'
 #' todo: add description here
 #'
@@ -6,9 +6,12 @@
 #' @aliases classicShapeNA
 #' @aliases tylerShapeNA
 #'
-#' @usage powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
-#' @usage tylerShapeNA(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
-#' @usage classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
+#' @usage powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"), 
+#'          maxiter = 1e4, tol = 1e-6)
+#' @usage tylerShapeNA(x, center = NULL, normalization = c("det", "trace", "one"), 
+#'           maxiter = 1e4, tol = 1e-6)
+#' @usage classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"),
+#'          maxiter = 1e4, tol = 1e-6)
 #'
 #' @param x data matrix or data.frame with missing data and more than 2 columns. Representing sample from continuous distribution and MCAR missingness
 #' @param alpha numeric, determines power function
@@ -20,8 +23,8 @@
 #' @return shape and center estimate
 #' @export
 #'
-#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54(2), 374-393.
-#' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569.
+#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. <doi:10.1016/j.csda.2009.08.019>.
+#' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. <10.1016/j.jmva.2019.104569>.
 #'
 #' @examples
 #'     ## generate data set with missing values
