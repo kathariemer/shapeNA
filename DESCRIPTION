@@ -1,12 +1,23 @@
 Package: shapeNA
-Title: What the Package Does (One Line, Title Case)
+Title: M-Estimation of Shape for Data With Missing Values
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+Authors@R:
+    c(person(given = "Katharina",
+             family = "Riemer",
+         email = "maintainer email",
+             role = c("cre","aut")),
+      person(given = "Gabriel",
+             family = "Frahm",
+             role = c("aut"),
+             comment = c(ORCID = "0000-0001-7507-730X"))
+      person(given = "Klaus",
+             family = "Nordhausen",
+             role = c("aut"),
+             comment = c(ORCID = "0000-0002-3758-8501")),
+      person(given = "Una",
+             family = "Radojicic",
+             role = c("aut"),
+             comment = c(ORCID = "0000-0003-0329-0595"))) 
 Description: What the package does (one paragraph).
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
