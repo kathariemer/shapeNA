@@ -4,13 +4,16 @@
 \alias{powerShapeNA}
 \alias{classicShapeNA}
 \alias{tylerShapeNA}
-\title{Compute tyler's shape estimate for incomplete data}
+\title{Computing M-Estimators of Shape for Data With Missing Values}
 \usage{
-powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
+powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"), 
+         maxiter = 1e4, tol = 1e-6)
 
-tylerShapeNA(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
+tylerShapeNA(x, center = NULL, normalization = c("det", "trace", "one"), 
+          maxiter = 1e4, tol = 1e-6)
 
-classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
+classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"),
+         maxiter = 1e4, tol = 1e-6)
 }
 \arguments{
 \item{x}{data matrix or data.frame with missing data and more than 2 columns. Representing sample from continuous distribution and MCAR missingness}
@@ -40,7 +43,7 @@ todo: add description here
     summary(res)
 }
 \references{
-Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54(2), 374-393.
+Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. \url{doi:10.1016/j.csda.2009.08.019}.
 
-Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569.
+Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. <10.1016/j.jmva.2019.104569>.
 }
