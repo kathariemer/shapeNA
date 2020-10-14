@@ -203,23 +203,34 @@ plot.shapeNA <- function(obj, legend=TRUE, message=TRUE) {
   }
 }
 
+tr <- function(X) {
+  return(sum(diag(X)))
+}
+
 # return a scaled scale estimator S, which satisfies trace(S) = p
 scaleTr <- function(Sigma) {
-  s <- nrow(Sigma)/sum(diag(Sigma))
-  return(Sigma*s)
+  #s <- nrow(Sigma)/sum(diag(Sigma))
+  s <- tr(Sigma)/nrow(Sigma)
+  if (s == 0) {
+    stop("Cannot scale matrix, trace equals 0")
+  }
+  return(list(S = Sigma/s, scale=s))
 }
 
 scaleDet <- function(Sigma) {
   d <- det(Sigma)^(1/ncol(Sigma))
-  return(Sigma/d)
+  if (d == 0) {
+    stop("Cannot scale matrix, determinant equals 0")
+  }
+  return(list(S = Sigma/d, scale=d))
 }
 
 scaleOne <- function(Sigma) {
-  return(Sigma/Sigma[1,1])
-}
-
-tr <- function(X) {
-  return(sum(diag(X)))
+  s <- Sigma[1,1]
+  if (s == 0) {
+    stop("Cannot scale matrix, first entry equals 0")
+  }
+  return(list(S = Sigma/Sigma[1,1], scale = s))
 }
 
 colors <- c(red = "#d55e00",
@@ -356,4 +367,11 @@ normalizationFunction <- function(normalization) {
     stop("Unknown method of normalization")
   }
   return(scatterNormFct)
+}
+
+asCov <- function(obj) {
+  if (obj$alpha == 1) {
+    stop("Covariance matrix for Tyler's M-estimate undefined")
+  }
+  return(obj$scale * obj$S)
 }

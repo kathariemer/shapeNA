@@ -9,15 +9,15 @@ mestimator_cov.default <- function(x, ...) {
 mestimator_cov.data.frame <- function(x, ...) {
   mestimator_cov.matrix(as.matrix(x), ...)
 }
-  
+
 mestimator_cov.matrix <- function(x, powerfct, normalization, maxiter=1e4, tol=1e-6, ...) {
   if (tol <= 0 || maxiter <= 0) {
     stop("Nonpositive arguments maxiter or tol.")
   }
   if (any(is.na(x))) {
     return(mestimator_cov.naBlocks(naBlocks(x), powerfct, normalization, maxiter, tol, ...))
-  } 
-  
+  }
+
   i <- 0
   dist <- 2*tol
   n <- nrow(x)
@@ -33,12 +33,13 @@ mestimator_cov.matrix <- function(x, powerfct, normalization, maxiter=1e4, tol=1
     S0 <- S
     i <- i+1
   }
-  
+
   if (i >= maxiter) {
     warning(paste("No convergence in", i, "steps."))
   }
-  
-  res <- list(S=normalization(S), mu=NULL, alpha=NULL, iterations=i, naBlocks=NULL)
+
+  shape <- normalization(S)
+  res <- list(S=shape$S, scale=shape$scale, mu=NULL, alpha=NULL, iterations=i, naBlocks=NULL)
   class(res) <- "shapeNA"
   return(res)
 }
@@ -55,11 +56,11 @@ mestimator_cov.naBlocks <- function(x, powerfct, normalization, maxiter, tol, ..
 
   # use closure
   covOfSubset <- function(x, S, varCount, n) {
-      Sinv <- solve(S) 
+      Sinv <- solve(S)
       if (!isSymmetric(Sinv)) {
         Sinv <- (Sinv + t(Sinv))/2
       }
-      xi <- rowSums((x%*%Sinv)* x) 
+      xi <- rowSums((x%*%Sinv)* x)
       try(
         w <- powerfct(xi, p, varCount)$w
       )
@@ -88,7 +89,7 @@ mestimator_cov.naBlocks <- function(x, powerfct, normalization, maxiter, tol, ..
       cols <- asBinaryVector(blockPattern[j], p)
       tryCatch(
       aux <- covOfSubset(
-        y[rows, cols, drop = FALSE], S0[cols, cols], 
+        y[rows, cols, drop = FALSE], S0[cols, cols],
         n = length(rows), varCount = sum(cols))
       , error = function(e) {
         message(paste("Iteration", i, "block", j))
@@ -104,15 +105,16 @@ mestimator_cov.naBlocks <- function(x, powerfct, normalization, maxiter, tol, ..
     S0 <- S0 + a_Sigma
     i <- i+1
   }
-  
+
   if (i >= maxiter) {
     warning(paste("No convergence in", i, "steps."))
   }
-  
+
   ogOrder <- order(x$permutation)
   S0 <- S0[ogOrder, ogOrder]
-  
-  res <- list(S=normalization(S0), mu=NULL, alpha=NULL, iterations=i, naBlocks=x)
+
+  shape <- normalization(S0)
+  res <- list(S=shape$S, scale=shape$scale, mu=NULL, alpha=NULL, iterations=i, naBlocks=x)
   class(res) <- "shapeNA"
   return(res)
 }

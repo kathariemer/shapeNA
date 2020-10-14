@@ -9,15 +9,15 @@ mestimator_mean_cov.default <- function(x, ...) {
 mestimator_mean_cov.data.frame <- function(x, ...) {
   mestimator_mean_cov(as.matrix(x), ...)
 }
-  
+
 mestimator_mean_cov.matrix <- function(x, powerfct, normalization, maxiter=1e4, tol=1e-6, ...) {
   if (tol <= 0 || maxiter <= 0) {
     stop("Nonpositive arguments maxiter or tol.")
   }
   if (any(is.na(x))) {
     return(mestimator_mean_cov.naBlocks(naBlocks(x), powerfct, normalization, maxiter, tol, ...))
-  } 
-  
+  }
+
   x_nonCentered <- x
   centerAndKeepNonzeroObs <- function(mu) {
     x <- sweep(x_nonCentered, 2, mu)
@@ -39,7 +39,7 @@ mestimator_mean_cov.matrix <- function(x, powerfct, normalization, maxiter=1e4, 
     x <- centerAndKeepNonzeroObs(mu)
     n <- nrow(x)
     # squared mahalanobis distances xi
-    xi <- rowSums(x * t(solve(S0, t(x)))) 
+    xi <- rowSums(x * t(solve(S0, t(x))))
     try(w <- powerfct(xi, p = p))
     S <- (crossprod(x, w$w*x))/n
     mu2 <-  colMeans(sweep(x, 1, w$v, "*"))
@@ -49,12 +49,13 @@ mestimator_mean_cov.matrix <- function(x, powerfct, normalization, maxiter=1e4, 
     mu <- mu+mu2
     i <- i+1
   }
-  
+
   if (i >= maxiter) {
     warning(paste("No convergence in", i, "steps."))
   }
-  
-  res <- list(S=normalization(S0), mu=mu, alpha=NULL, iterations=i, naBlocks=NULL)
+
+  shape <- normalization(S0)
+  res <- list(S=shape$S, scale=shape$scale, mu=mu, alpha=NULL, iterations=i, naBlocks=NULL)
   class(res) <- "shapeNA"
   return(res)
 }
@@ -74,15 +75,15 @@ mestimator_mean_cov.naBlocks <- function(x, powerfct, normalization, maxiter, to
     }
     return(x)
   }
-  
+
   i <- 0
   dist <- 2*tol
   n <- nrow(y_nonCentered)
   p <- ncol(y_nonCentered)
-  
+
   # use closure: access powerfct and dimension p without supplying as argument
   covAndMeanOfSubset <- function(x, S, varCount, n) {
-      Sinv <- solve(S) 
+      Sinv <- solve(S)
       if (!isSymmetric(Sinv)) {
         Sinv <- (Sinv + t(Sinv))/2
       }
@@ -95,8 +96,8 @@ mestimator_mean_cov.naBlocks <- function(x, powerfct, normalization, maxiter, to
       b <- sweep(x%*%rootS, 1, w$v, FUN = "*")
       return(list(S=Sinv %*% a %*% Sinv - n * Sinv, mu=colSums(b)))
   }
-  
-  
+
+
   S0 <- diag(p)
   blockIdx <- x$N
   blockPattern <- x$P
@@ -140,16 +141,17 @@ mestimator_mean_cov.naBlocks <- function(x, powerfct, normalization, maxiter, to
     mu <- mu + a_mu
     i <- i+1
   }
-  
+
   if (i >= maxiter) {
     warning(paste("No convergence in", i, "steps."))
   }
-  
+
   ogOrder <- order(x$permutation)
   S0 <- S0[ogOrder, ogOrder]
   mu <- mu[ogOrder]
-  
-  res <- list(S=normalization(S0), mu=mu, alpha=NULL, iterations=i, naBlocks=x)
+
+  shape <- normalization(S0)
+  res <- list(S=shape$S, scale=shape$scale, mu=mu, alpha=NULL, iterations=i, naBlocks=x)
   class(res) <- "shapeNA"
   return(res)
 }
