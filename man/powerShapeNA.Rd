@@ -6,33 +6,62 @@
 \alias{tylerShapeNA}
 \title{Computing M-Estimators of Shape for Data With Missing Values}
 \usage{
-powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"), 
-         maxiter = 1e4, tol = 1e-6)
+powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"),
+         maxiter = 1e4, eps = 1e-6)
 
-tylerShapeNA(x, center = NULL, normalization = c("det", "trace", "one"), 
-          maxiter = 1e4, tol = 1e-6)
+tylerShapeNA(x, center = NULL, normalization = c("det", "trace", "one"),
+          maxiter = 1e4, eps = 1e-6)
 
 classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"),
-         maxiter = 1e4, tol = 1e-6)
+         maxiter = 1e4, eps = 1e-6)
 }
 \arguments{
-\item{x}{data matrix or data.frame with missing data and more than 2 columns. Representing sample from continuous distribution and MCAR missingness}
+\item{x}{A data matrix or data.frame with missing data and \code{p > 2} columns.
+Representing sample from generalized elliptical distribution and MCAR missingness}
 
-\item{alpha}{numeric, determines power function}
+\item{alpha}{Tail index, a numeric value from the interval \link{0, 1}. Determines
+the power function. For more information see 'Details'.}
 
-\item{center}{optional vector of center, if NULL the center will be estimated simultaneously to the shape estimate}
+\item{center}{An optional vector of the data's center, if NULL the center
+will be estimated simultaneously to the shape estimate.}
 
-\item{normalization}{string, determines scale of returned shape estimate}
+\item{normalization}{A string, determines scale of returned shape estimate.
+The possible values are \itemize{
+\item{'det'} s.t. the returned shape estimate has determinant 1.
+\item{'trace'} s.t. the returned shape estimate has trace \code{p}.
+\item{'one'} s.t. the returned shape estimate's first entry is 1.
+}}
 
-\item{maxiter}{integer, maximum number of iterations}
+\item{maxiter}{A positive integer, restricting the maximum number of iterations.}
 
-\item{tol}{numeric, tolerance level}
+\item{eps}{A numeric, specifying tolerance level of when the iteration stops.}
 }
 \value{
-shape and center estimate
+A \code{shapeNA} object with a shape estimate \code{S} and either a center \code{mu},
+which was either the supplied \code{center} vector or has been estimated.
 }
 \description{
-todo: add description here
+\code{powerShapeNA}, \code{tylerShapeNA} and \code{classicShapeNA} compute
+power M-estimators of shape for data with missing values. The underlying
+missingness mechanism should be MCAR. These functions also compute estimates
+of location if no \code{center} is supplied.
+}
+\details{
+For multivariate normally distributed data, \code{classicShapeNA} is an
+ML-estimator. This is a special case of the power M-estimator with tail index
+\code{alpha} = 0 and returns the empirical covariance matrix and the empirical mean
+vector.
+
+\code{tylerShapeNA} maximizes the likelihood function after projecting the observed
+data of each individual onto the unit hypersphere, in which case we obtain
+an angular central Gaussian distribution. This is a special case of the power
+M-estimator with tail index \code{alpha} = 1 and returns Tyler's M-estimator of
+scatter and an affine equivariant multivariate median.
+
+\code{powerShapeNA} requires an additional parameter, the so-called tail index \code{alpha}.
+For asymptotic normality, this index should be chosen taking into consideration
+the data. For heavy tailed data, the index should be closer to 1, for light
+tailed data the index should be chosen closer to 0.
 }
 \examples{
     ## generate data set with missing values
