@@ -1,22 +1,51 @@
-#' Compute shape estimate for full data
+#' Computing M-Estimators of Shape for Data Without Missing Values
 #'
-#' Given a data matrix \code{x} from a continuous distribution, return a shape estimate and, if not supplied as \code{center}, a location estimate.
+#' `powerShape`, `tylerShape` and `classicShape` compute
+#' power M-estimators of shape. Using `powerShape` and `classicShape`
+#' it is even possible to compute M-estimators of covariance matrices.
+#' These functions also compute estimates of location if no `center` is supplied.
 #'
-# aliases could also be in a comma separated list
+#' For multivariate normally distributed data, `classicShape` is an
+#' ML-estimator. This is a special case of the power M-estimator with tail index
+#' `alpha` = 0 and returns the empirical covariance matrix and the empirical mean
+#' vector.
+#'
+#' `tylerShape` maximizes the likelihood function after projecting the observed
+#' data of each individual onto the unit hypersphere, in which case we obtain
+#' an angular central Gaussian distribution. This is a special case of the power
+#' M-estimator with tail index `alpha` = 1 and returns Tyler's M-estimator of
+#' scatter and an affine equivariant multivariate median.
+# TODO: Hettmansperger and randles
+#'
+#' `powerShape` requires an additional parameter, the so-called tail index `alpha`.
+#' For asymptotic normality, this index should be chosen taking into consideration
+#' the data. For heavy tailed data, the index should be closer to 1, for light
+#' tailed data the index should be chosen closer to 0.
+#'
 #' @aliases powerShape
 #' @aliases tylerShape
 #' @aliases classicShape
 #'
-#' @usage powerShape(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
-#' @usage tylerShape(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
-#' @usage classicShape(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6)
+#' @usage powerShape(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
+#' @usage tylerShape(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
+#' @usage classicShape(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
 #'
-#' @param x numeric data matrix or data.frame without missing data. Representing sample from continuous distribution
-#' @param alpha numeric, determines power function
-#' @param center optional vector of center, if NULL the center will be estimated simultaneously to the shape estimate
-#' @param normalization string, determines scale of returned shape estimate
-#' @param maxiter integer, maximum number of itreations
-#' @param tol numeric, tolerance level
+#' @param x A numeric data matrix or data.frame without missing data.
+#' @param alpha Tail index, a numeric value from the interval [0, 1]. Determines
+#'   the power function. For more information see 'Details'.
+#' @param center An optional vector of the data's center, if NULL the center
+#'   will be estimated simultaneously to the shape estimate.
+#' @param normalization A string, determines scale of returned shape estimate.
+#'   The possible values are \itemize{
+#'     \item{'det'} s.t. the returned shape estimate has determinant 1.
+#'     \item{'trace'} s.t. the returned shape estimate has trace `p`.
+#'     \item{'one'} s.t. the returned shape estimate's first entry is 1.
+#'   }
+#' @param maxiter A positive integer, restricting the maximum number of iterations.
+#' @param eps A numeric, specifying tolerance level of when the iteration stops.
+#'
+#' @return A `shapeNA` object with a shape estimate `S` and either a center `mu`,
+#'   which was either the supplied `center` vector or has been estimated.
 #'
 #' @return a shapeNA object, which contains a shape and center estimate
 #' @export
@@ -32,7 +61,7 @@
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out=5)))
 #'     res <- powerShape(x, alpha=0.67, normalization='one')
 #'
-powerShape <- function(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, tol = 1e-6) {
+powerShape <- function(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6) {
   if (any(is.na(x))) {
     stop("Missing values found. Use powerShapeNA()")
   }
@@ -43,7 +72,7 @@ powerShape <- function(x, alpha, center = NULL, normalization = c("det", "trace"
   try(
     {
     if (is.null(center)) {
-      res <- mestimator_mean_cov(x, powerfct, scatterNormFct, maxiter, tol)
+      res <- mestimator_mean_cov(x, powerfct, scatterNormFct, maxiter, eps)
     } else {
       xCentered <- sweep(x, 2, center)
       zeroEntry <- rowSums(xCentered) == 0
@@ -56,7 +85,7 @@ powerShape <- function(x, alpha, center = NULL, normalization = c("det", "trace"
           message("Found ", z, " observations coinciding with given center.")
         }
       }
-      res <- mestimator_cov(xCentered, powerfct, scatterNormFct, maxiter, tol)
+      res <- mestimator_cov(xCentered, powerfct, scatterNormFct, maxiter, eps)
       res$mu <- center
     }
     res$alpha <- alpha
