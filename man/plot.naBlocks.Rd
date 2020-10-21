@@ -9,3 +9,9 @@
 \description{
 plot missingness pattern of data
 }
+\examples{
+    x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+    y <- mice::ampute(x, mech='MCAR')$amp
+    res <- classicShapeNA(y)
+    plot(res$naBlocks)
+}

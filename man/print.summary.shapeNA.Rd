@@ -17,3 +17,7 @@ invisibly return NULL
 \description{
 print method for class summary.shapeNA
 }
+\examples{
+    obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))
+    print(summary(obj))
+}

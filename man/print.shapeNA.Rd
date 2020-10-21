@@ -9,3 +9,8 @@
 \description{
 Only print M-estimates and alpha level
 }
+\examples{
+    x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+    res <- tylerShape(x)
+    res ## equivalent to call print(res)
+}

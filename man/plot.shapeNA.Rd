@@ -10,3 +10,9 @@
 If estimate comes from missing data, additionally the columns are
 marked with a colored bar, indicating their missingness proportion
 }
+\examples{
+    x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+    y <- mice::ampute(x, mech='MCAR')$amp
+    res <- tylerShapeNA(y)
+    plot(res)
+}

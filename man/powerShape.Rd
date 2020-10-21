@@ -62,9 +62,22 @@ the data. For heavy tailed data, the index should be closer to 1, for light
 tailed data the index should be chosen closer to 0.
 }
 \examples{
-    x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out=5)))
-    res <- powerShape(x, alpha=0.67, normalization='one')
-
+    ## Generate example data
+    S <- toeplitz(c(1, 0.1))
+    x <- mvtnorm::rmvt(100, S)
+    ## Compute some M-estimators
+    res0 <- classicShape(x, center = c(0, 0))
+    res1 <- powerShape(x, alpha = 0.67, normalization = 'one')
+    res2 <- tylerShape(x, normalization = 'trace')
+    ## Get location estimates
+    res1$mu
+    res2$mu
+    ## Get shape estimates
+    res0$S
+    res1$S
+    res2$S
+    ## Print summary
+    summary(res0)
 }
 \references{
 Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54(2), 374-393.

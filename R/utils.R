@@ -1,17 +1,29 @@
-# format data / preprocessing for Mestimator
-# s.t. first row and first column have most responses
-# and last row and last column has least number of responses
-# with monotone increase
-# @param data nxp matrix
-# @param cleanup logical flag, if true, observations with less than 2 responses
-#    are discarded
-# @param plot logical flag
-# @return list with
-#    data, which has been reordered and cleaned up
-#    permutation, which indicates new ordering of the variables
-#    N - signifying the rows in which the missingness pattern changes
-#    D - signifying the number of responses per observation in the corresponding block
-#    P - signifying missingness pattern
+#' Reorder Data With Missing Values
+#'
+#' Reorder a data set with `NA` entries to form blocks of missing values. The resulting
+#' data will have increasing missingness along the rows and along the columns. The rows
+#' are ordered s.t. the first block consists of complete observations, and
+#' the following blocks are ordered from most frequent missingness pattern to least
+#' frequent missingness pattern.
+#' This method may fail, as it has been designed as a preprocessing step for
+#' shape estimations.
+#'
+#' @param data A matrix with `NA` values
+#' @param cleanup A logical flag. If `TRUE`, observations with less than 2 responses
+#'    are discarded
+#' @param plot A logical flag. If true, a plot of the missingness pattern is produced.
+#'
+#' @return a `naBlocks` object, which is a list with \itemize{
+#'     \item `data` the reordered data matrix
+#'     \item `permutation` the permutation of the columns, which was applied to reorder
+#'         the columns according to the number of `NA`s
+#'     \item `rowPermutation` the permutation of the rows, which generates the blocks
+#'     \item `N` a vector of all row indices. Each row number points to the beginning
+#'         of a new missingness pattern
+#'     \item `D` a vector specifying the missingness pattern for each block.
+#'     \item `P` a vector specifying the number of observed variables per block.
+#'     \item `kn` a vector specifying the percentage of observed responses per variable.
+#' }
 naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
   ## remove observations without responses or only 1 response ##
   x <- data
@@ -70,6 +82,11 @@ naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
 #' plot missingness pattern of data
 #'
 #' @export
+#' @examples
+#'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+#'     y <- mice::ampute(x, mech='MCAR')$amp
+#'     res <- classicShapeNA(y)
+#'     plot(res$naBlocks)
 plot.naBlocks <- function(x, orderProp=TRUE, ...) {
   idx <- x$N
   bprop <- (idx - c(0, idx[-length(idx)]))/nrow(x$data)
@@ -85,6 +102,7 @@ plot.naBlocks <- function(x, orderProp=TRUE, ...) {
 }
 
 # given a number n, return its binary representation as a vector
+#
 # @param n decimal number
 # @param d length of vector
 # @param logical whether to return a numeric or logical vector
@@ -163,6 +181,10 @@ grayscale <- function(A) {
 #' Only print M-estimates and alpha level
 #'
 #' @export
+#' @examples
+#'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+#'     res <- tylerShape(x)
+#'     res ## equivalent to call print(res)
 print.shapeNA <- function(obj) {
   if (is.null(obj$mu)) {
     print(list(alpha=obj$alpha, S=obj$S))
@@ -177,6 +199,11 @@ print.shapeNA <- function(obj) {
 #' marked with a colored bar, indicating their missingness proportion
 #'
 #' @export
+#' @examples
+#'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+#'     y <- mice::ampute(x, mech='MCAR')$amp
+#'     res <- tylerShapeNA(y)
+#'     plot(res)
 plot.shapeNA <- function(obj, legend=TRUE, message=TRUE) {
   S <- grayscale(obj$S)
   p <- nrow(S)
@@ -203,6 +230,7 @@ plot.shapeNA <- function(obj, legend=TRUE, message=TRUE) {
   }
 }
 
+# trace of matrix, i.e. sum of diagonal entries
 tr <- function(X) {
   return(sum(diag(X)))
 }
@@ -284,6 +312,11 @@ print.naBlocks <- function(obj) {
 #' Barplot showcasing missingness proportion of the original data
 #'
 #' @export
+#' @examples
+#'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+#'     y <- mice::ampute(x, mech='MCAR')$amp
+#'     res <- classicShapeNA(y)
+#'     barplot(res$naBlocks)
 barplot.naBlocks <- function(obj, sortNA=FALSE) {
   mprop <- colSums(is.na(obj$data))/nrow(obj$data)
   if (!sortNA) {
@@ -317,6 +350,9 @@ summary.shapeNA <- function(obj, ...) {
 #' @return invisibly return NULL
 #' @export
 #'
+#' @examples
+#'     obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))
+#'     print(summary(obj))
 print.summary.shapeNA <- function(obj, ...) {
   cat('Call: ')
   print(obj$call)
@@ -326,7 +362,7 @@ print.summary.shapeNA <- function(obj, ...) {
   cat('\nShape:\n')
   print(obj$S, digits=3)
   if (!is.null(obj$naBlocks)) {
-    cat('Missingness pattern:\n')
+    cat('\nMissingness pattern:\n')
     print(obj$naBlocks)
   }
   cat('---\nComputed', obj$iterations, 'iterations.\n')
@@ -369,9 +405,71 @@ normalizationFunction <- function(normalization) {
   return(scatterNormFct)
 }
 
-asCov <- function(obj) {
+# for power M-estimates with alpha < 1: restore covariance estimate
+toCov <- function(obj) {
   if (obj$alpha == 1) {
     stop("Covariance matrix for Tyler's M-estimate undefined")
   }
   return(obj$scale * obj$S)
+}
+
+#' Ellipse For Covariance Matrix From M-Estimator
+#'
+#' Given a `shapeNA` object, get (x,y)-coordinates of points, which for the
+#' estimated scatter (shape, if `alpha` == 1) and location have mahalanobis
+#' distance 1.
+#'
+#' @param obj A `shapeNA` object
+#' @param idx A vector of two distinct indices which specify the submatrix
+#' @param n number of points on the ellipse
+#'
+#' @examples
+#'     S <- toeplitz(c(1, 0.3, 0.7))
+#'     set.seed(123)
+#'     x <- mvtnorm::rmvt(100, S, df = 3)
+#'     obj <- powerShape(x, alpha = 0.85)
+#'     ## Plot variables 1 and 3
+#'     idx <- c(1,3)
+#'     plot(x[, idx])
+#'
+#'     ## Plot projection of true covariance matrix
+#'     lines(shapeNA:::ellipse(S[idx, idx], c(0, 0)), col = 2)
+#'     ## Plot base-R estimate
+#'     lines(shapeNA:::ellipse(cov(x[, idx]), c(0, 0)), col = 3, lty = 2)
+#'     ## Plot M-estimate
+#'     lines(shapeNA:::ellipseShape(obj, idx=idx), col = 4, lty = 2)
+ellipseShape <- function(obj, idx=1:2, n = 250) {
+  S <- if (obj$alpha == 1) {
+    obj$S
+  } else {
+    toCov(obj)
+  }
+  S <- S[idx, idx]
+  mu <- (obj$mu)[idx]
+  return(ellipse(S, mu, n))
+}
+
+#' Ellipse For Covariance Matrix
+#'
+#' Given a center and covariance, get (x,y)-coordinates of points, which have
+#' mahalanobis distance 1.
+#'
+#' @param S A 2x2 covariance matrix
+#' @param mu A 2-dimensional vector for the ellipse's center
+#' @param n number of points on the ellipse
+#'
+#' @examples
+#'     S <- toeplitz(c(1, 0.3, 0.7))
+#'     x <- mvtnorm::rmvt(100, S, df = 3)
+#'
+#'     ## Plot variables 1 and 3
+#'     idx <- c(1,3)
+#'     plot(x[, idx])
+#'     ## Plot projection of true covariance matrix
+#'     lines(shapeNA:::ellipse(S[idx, idx], c(0, 0)), col = 2)
+ellipse <- function(S, mu, n = 250) {
+  t <- seq(0, 2*pi, length.out = n)
+  circle <- matrix(c(cos(t), sin(t)), ncol = 2)
+  m <- sqrt(mahalanobis(circle, mu, S))
+  return(sweep(circle, 1, m, FUN = '/'))
 }

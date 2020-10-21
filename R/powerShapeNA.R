@@ -56,12 +56,28 @@
 #' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. <doi:10.1016/j.jmva.2019.104569>.
 #'
 #' @examples
-#'     ## generate data set with missing values
+#'     ## Generate a data set with missing values
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
 #'     y <- mice::ampute(x, mech='MCAR')$amp
-#'     ## compute M-estimate
-#'     res <- powerShapeNA(y, alpha = 0.5)
-#'     summary(res)
+#'
+#'     ## Compute some M-estimators
+#'     res0 <- classicShapeNA(y, center = c(0, 0, 0))
+#'     res1 <- powerShapeNA(y, alpha = 0.67, normalization = 'one')
+#'     res2 <- tylerShapeNA(y, normalization = 'trace')
+#'
+#'     ## Get location estimates
+#'     res1$mu
+#'     res2$mu
+#'     ## Get shape estimates
+#'     res0$S
+#'     res1$S
+#'     res2$S
+#'
+#'     ## Print summary
+#'     summary(res0)
+#'     ## Inspect missingness pattern
+#'     plot(res0$naBlocks)
+#'     barplot(res0$naBlocks)
 powerShapeNA <- function(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6) {
   if (!any(is.na(x))) {
     stop("No missing values found. Use powerShape().")
