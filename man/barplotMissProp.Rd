@@ -24,3 +24,6 @@ Visualize the proportion of missingness per variable in a barplot.
     res <- classicShapeNA(y)
     barplotMissProp(res$naBlocks)
 }
+\seealso{
+\code{\link[graphics]{barplot}}
+}

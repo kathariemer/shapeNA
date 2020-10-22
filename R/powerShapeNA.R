@@ -1,4 +1,4 @@
-#' Computing M-Estimators of Shape for Data With Missing Values
+#' Compute M-Estimators of Shape for Data With Missing Values
 #'
 #' `powerShapeNA`, `tylerShapeNA` and `classicShapeNA` compute
 #' power M-estimators of shape for data with missing values. The underlying
@@ -35,7 +35,7 @@
 #'
 #' @param x A data matrix or data.frame with missing data and `p > 2` columns.
 #'   Representing sample from generalized elliptical distribution and MCAR missingness
-#' @param alpha Tail index, a numeric value from the interval [0, 1]. Determines
+#' @param alpha Tail index, a numeric value from the interval `[0, 1]`. Determines
 #'   the power function. For more information see 'Details'.
 #' @param center An optional vector of the data's center, if NULL the center
 #'   will be estimated simultaneously to the shape estimate.
@@ -54,6 +54,9 @@
 #'
 #' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. <doi:10.1016/j.csda.2009.08.019>.
 #' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. <doi:10.1016/j.jmva.2019.104569>.
+#'
+#' @seealso [powerShape], [tylerShape] and [classicShape] for the
+#'     corresponding functions for data without missing values.
 #'
 #' @examples
 #'     ## Generate a data set with missing values

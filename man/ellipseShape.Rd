@@ -28,9 +28,9 @@ distance 1.
     plot(x[, idx])
 
     ## Plot projection of true covariance matrix
-    lines(shapeNA:::ellipse(S[idx, idx], c(0, 0)), col = 2)
+    lines(shapeNA:::ellipse(c(0, 0), S[idx, idx]), col = 2)
     ## Plot base-R estimate
-    lines(shapeNA:::ellipse(cov(x[, idx]), c(0, 0)), col = 3, lty = 2)
+    lines(shapeNA:::ellipse(c(0, 0), cov(x[, idx])), col = 3, lty = 2)
     ## Plot M-estimate
     lines(shapeNA:::ellipseShape(obj, idx=idx), col = 4, lty = 2)
 }

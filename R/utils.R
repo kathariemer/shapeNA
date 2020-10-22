@@ -83,7 +83,7 @@ naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
 }
 
 
-#' plot missingness pattern of data
+#' Plot Missingness Pattern of Data
 #'
 #' @param x A `naBlocks` object
 #' @param ... additional parameters
@@ -94,18 +94,12 @@ naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- classicShapeNA(y)
 #'     plot(res$naBlocks)
-plot.naBlocks <- function(x, orderProp=TRUE, ...) {
+plot.naBlocks <- function(x, ...) {
   idx <- x$N
   bprop <- (idx - c(0, idx[-length(idx)]))/nrow(x$data)
-  if (orderProp){
-    bIdx <- order(bprop, decreasing = TRUE)
-    bprop <- bprop[bIdx]
-    plotAsBoolMat(x$data[idx[bIdx],], round(bprop,3))
-  } else {
-    bIdx <- 1:length(idx)
-    plotAsBoolMat(x$data[idx,], round(bprop,3))
-  }
-  invisible(list(blockProps=bprop, blockIdx=bIdx))
+  bIdx <- 1:length(idx)
+  plotAsBoolMat(x$data[idx,], round(bprop,3))
+  invisible(bprop)
 }
 
 # given a number n, return its binary representation as a vector
@@ -166,12 +160,12 @@ plotAsBoolMat <- function(R, blockNames, ...) {
   ybottom <- 0:(r-1)
   for (i in 1:c) {
     rowColor <- ifelse(B[,i], color2, colors["blue"])
-    rect(xleft, ybottom, xleft+1, ybottom+1, col = rowColor, ...)
+    graphics::rect(xleft, ybottom, xleft+1, ybottom+1, col = rowColor, ...)
     xleft <- xleft+1
   }
-  text(0.5+(1:c),r+1, colnames(R))
+  graphics::text(0.5+(1:c),r+1, colnames(R))
   if (!missing(blockNames)){
-    text(0, (1:r)-0.5, blockNames)
+    graphics::text(0, (1:r)-0.5, blockNames)
   }
 }
 
@@ -183,9 +177,9 @@ grayscale <- function(A) {
   return((A-m)/(m-M)+1)
 }
 
-#' print method for elements of class shapeNA
+#' Print Method for Elements of Class `shapeNA`
 #'
-#' Only print M-estimates and alpha level
+#' Print alpha level, shape estimate and center.
 #'
 #' @param x A `shapeNA` object
 #' @param ... Additional parameters.
@@ -203,13 +197,14 @@ print.shapeNA <- function(x, ...) {
   }
 }
 
-#' Crude visualization of shape estimate
+#' Visualization of Shape Estimate
 #'
 #' Plot each matrix entry as a cell, with dark cells indicating high values and
 #' light values indicate small values.
 #'
 #' @param x A `shapeNA` oopbject
-#' @param message A logical, If `TRUE`, a similar summary is printed in the console.
+#' @param message A logical, If `TRUE`, the percentage of observed values per
+#'     variable is printed in the console.
 #' @param ... Additional parameters.
 #'
 #' @export
@@ -218,14 +213,14 @@ print.shapeNA <- function(x, ...) {
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- tylerShapeNA(y)
 #'     plot(res)
-plot.shapeNA <- function(x, message=TRUE, ...) {
+plot.shapeNA <- function(x, message = TRUE, ...) {
   imageS <- x$S
   p <- ncol(imageS)
   vars <- x$naBlocks$colNames
   ## "flip" image to have 1st entry in lower left corner
   imageS <- t(imageS[p:1,])
   graphics::image(imageS, xaxt = 'n', yaxt = 'n', ...)
-  axis(side = 1, at = seq(0, 1, length.out = p),
+  graphics::axis(side = 1, at = seq(0, 1, length.out = p),
        labels = vars, lwd = 0)
   if (!is.null(x$naBlocks) && message) {
     df <- data.frame(
@@ -338,6 +333,8 @@ print.naBlocks <- function(x, ...) {
 #'     else the variables are ordered from least to most missingness
 #' @param ... Additional graphical arguments for \code{\link[graphics]{barplot}}
 #'
+#' @seealso \code{\link[graphics]{barplot}}
+#'
 #' @export
 #' @examples
 #'     S <- toeplitz(seq(1, 0.1, length.out = 3))
@@ -357,12 +354,11 @@ barplotMissProp <- function(obj, sortNA = FALSE, ...) {
   invisible(mprop)
 }
 
-#' summary method for class shapeNA
+#' Summary Method for Class `shapeNA`
 #'
 #' @param object an object of class shapeNA, usually from a call to powerShape or similar functions
 #' @param ... further arguments
 #'
-#' @return object of class shapeNA
 #' @export
 #'
 #' @examples
@@ -373,12 +369,13 @@ summary.shapeNA <- function(object, ...) {
   return(object)
 }
 
-#' print method for class summary.shapeNA
+#' Print Method for Class `summary.shapeNA`
 #'
 #' @param x object returned from summary.shapeNA
 #' @param ... further arguments
 #'
 #' @return invisibly return NULL
+#'
 #' @export
 #'
 #' @examples
@@ -464,9 +461,9 @@ toCov <- function(obj) {
 #'     plot(x[, idx])
 #'
 #'     ## Plot projection of true covariance matrix
-#'     lines(shapeNA:::ellipse(S[idx, idx], c(0, 0)), col = 2)
+#'     lines(shapeNA:::ellipse(c(0, 0), S[idx, idx]), col = 2)
 #'     ## Plot base-R estimate
-#'     lines(shapeNA:::ellipse(cov(x[, idx]), c(0, 0)), col = 3, lty = 2)
+#'     lines(shapeNA:::ellipse(c(0, 0), cov(x[, idx])), col = 3, lty = 2)
 #'     ## Plot M-estimate
 #'     lines(shapeNA:::ellipseShape(obj, idx=idx), col = 4, lty = 2)
 ellipseShape <- function(obj, idx=1:2, n = 250) {
@@ -477,7 +474,7 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
   }
   S <- S[idx, idx]
   mu <- (obj$mu)[idx]
-  return(ellipse(S, mu, n))
+  return(ellipse(mu, S, n))
 }
 
 #' Ellipse For Covariance Matrix
@@ -485,8 +482,8 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
 #' Given a center and covariance, get (x,y)-coordinates of points, which have
 #' mahalanobis distance 1.
 #'
-#' @param S A 2x2 covariance matrix
 #' @param mu A 2-dimensional vector for the ellipse's center
+#' @param S A 2x2 covariance matrix
 #' @param n number of points on the ellipse
 #'
 #' @examples
@@ -497,10 +494,10 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
 #'     idx <- c(1,3)
 #'     plot(x[, idx])
 #'     ## Plot projection of true covariance matrix
-#'     lines(shapeNA:::ellipse(S[idx, idx], c(0, 0)), col = 2)
-ellipse <- function(S, mu, n = 250) {
+#'     lines(shapeNA:::ellipse(c(0, 0), S[idx, idx]), col = 2)
+ellipse <- function(mu, S, n = 250) {
   t <- seq(0, 2*pi, length.out = n)
   circle <- matrix(c(cos(t), sin(t)), ncol = 2)
-  m <- sqrt(mahalanobis(circle, mu, S))
+  m <- sqrt(stats::mahalanobis(circle, mu, S))
   return(sweep(circle, 1, m, FUN = '/'))
 }

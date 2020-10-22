@@ -4,18 +4,21 @@
 \alias{powerShape}
 \alias{tylerShape}
 \alias{classicShape}
-\title{Computing M-Estimators of Shape for Data Without Missing Values}
+\title{Compute M-Estimators of Shape for Data Without Missing Values}
 \usage{
-powerShape(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
+powerShape(x, alpha, center = NULL,
+    normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
 
-tylerShape(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
+tylerShape(x, center = NULL,
+    normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
 
-classicShape(x, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
+classicShape(x, center = NULL,
+    normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
 }
 \arguments{
 \item{x}{A numeric data matrix or data.frame without missing data.}
 
-\item{alpha}{Tail index, a numeric value from the interval \link{0, 1}. Determines
+\item{alpha}{Tail index, a numeric value from the interval \verb{[0, 1]}. Determines
 the power function. For more information see 'Details'.}
 
 \item{center}{An optional vector of the data's center, if NULL the center
@@ -85,9 +88,6 @@ Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to th
 Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569.
 }
 \seealso{
-\link{powerShapeNA}
-
-\link{tylerShapeNA}
-
-\link{classicShapeNA}
+\link{powerShapeNA}, \link{tylerShapeNA} and \link{classicShapeNA} for the
+corresponding functions for data with missing values.
 }

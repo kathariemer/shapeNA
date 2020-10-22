@@ -2,14 +2,15 @@
 % Please edit documentation in R/utils.R
 \name{plot.shapeNA}
 \alias{plot.shapeNA}
-\title{Crude visualization of shape estimate}
+\title{Visualization of Shape Estimate}
 \usage{
 \method{plot}{shapeNA}(x, message = TRUE, ...)
 }
 \arguments{
 \item{x}{A \code{shapeNA} oopbject}
 
-\item{message}{A logical, If \code{TRUE}, a similar summary is printed in the console.}
+\item{message}{A logical, If \code{TRUE}, the percentage of observed values per
+variable is printed in the console.}
 
 \item{...}{Additional parameters.}
 }

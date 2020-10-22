@@ -4,12 +4,12 @@
 \alias{ellipse}
 \title{Ellipse For Covariance Matrix}
 \usage{
-ellipse(S, mu, n = 250)
+ellipse(mu, S, n = 250)
 }
 \arguments{
-\item{S}{A 2x2 covariance matrix}
-
 \item{mu}{A 2-dimensional vector for the ellipse's center}
+
+\item{S}{A 2x2 covariance matrix}
 
 \item{n}{number of points on the ellipse}
 }
@@ -25,5 +25,5 @@ mahalanobis distance 1.
     idx <- c(1,3)
     plot(x[, idx])
     ## Plot projection of true covariance matrix
-    lines(shapeNA:::ellipse(S[idx, idx], c(0, 0)), col = 2)
+    lines(shapeNA:::ellipse(c(0, 0), S[idx, idx]), col = 2)
 }

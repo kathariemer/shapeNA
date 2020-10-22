@@ -4,7 +4,7 @@
 \alias{powerShapeNA}
 \alias{classicShapeNA}
 \alias{tylerShapeNA}
-\title{Computing M-Estimators of Shape for Data With Missing Values}
+\title{Compute M-Estimators of Shape for Data With Missing Values}
 \usage{
 powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"),
          maxiter = 1e4, eps = 1e-6)
@@ -19,7 +19,7 @@ classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"),
 \item{x}{A data matrix or data.frame with missing data and \code{p > 2} columns.
 Representing sample from generalized elliptical distribution and MCAR missingness}
 
-\item{alpha}{Tail index, a numeric value from the interval \link{0, 1}. Determines
+\item{alpha}{Tail index, a numeric value from the interval \verb{[0, 1]}. Determines
 the power function. For more information see 'Details'.}
 
 \item{center}{An optional vector of the data's center, if NULL the center
@@ -91,4 +91,8 @@ tailed data the index should be chosen closer to 0.
 Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. \url{doi:10.1016/j.csda.2009.08.019}.
 
 Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \url{doi:10.1016/j.jmva.2019.104569}.
+}
+\seealso{
+\link{powerShape}, \link{tylerShape} and \link{classicShape} for the
+corresponding functions for data without missing values.
 }

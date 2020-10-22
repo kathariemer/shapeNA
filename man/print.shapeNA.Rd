@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{print.shapeNA}
 \alias{print.shapeNA}
-\title{print method for elements of class shapeNA}
+\title{Print Method for Elements of Class \code{shapeNA}}
 \usage{
 \method{print}{shapeNA}(x, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{Additional parameters.}
 }
 \description{
-Only print M-estimates and alpha level
+Print alpha level, shape estimate and center.
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)

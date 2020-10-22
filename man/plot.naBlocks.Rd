@@ -2,9 +2,9 @@
 % Please edit documentation in R/utils.R
 \name{plot.naBlocks}
 \alias{plot.naBlocks}
-\title{plot missingness pattern of data}
+\title{Plot Missingness Pattern of Data}
 \usage{
-\method{plot}{naBlocks}(x, orderProp = TRUE, ...)
+\method{plot}{naBlocks}(x, ...)
 }
 \arguments{
 \item{x}{A \code{naBlocks} object}
@@ -12,7 +12,7 @@
 \item{...}{additional parameters}
 }
 \description{
-plot missingness pattern of data
+Plot Missingness Pattern of Data
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
