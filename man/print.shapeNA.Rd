@@ -4,7 +4,12 @@
 \alias{print.shapeNA}
 \title{print method for elements of class shapeNA}
 \usage{
-\method{print}{shapeNA}(obj)
+\method{print}{shapeNA}(x, ...)
+}
+\arguments{
+\item{x}{A \code{shapeNA} object}
+
+\item{...}{Additional parameters.}
 }
 \description{
 Only print M-estimates and alpha level

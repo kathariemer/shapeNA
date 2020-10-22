@@ -18,14 +18,22 @@ Authors@R:
              family = "Radojicic",
              role = c("aut"),
              comment = c(ORCID = "0000-0003-0329-0595"))) 
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to
-    pick a license
+Description: This package allows to compute power M-estimators for shape and 
+    location. Power M-estimators generalize both the empirical covariance estimates 
+    and Tyler's M-estimate of scatter. Methods for both complete data, as well as
+    data with missing values are supplied.
+    Additionally, the package contains some basic plotting functions, which aid
+    in visualization of the results.
+License: `use_gpl3_license("Katharina Riemer")`
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Imports:
+    graphics
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    mvtnorm,
+    mice
 VignetteBuilder: knitr

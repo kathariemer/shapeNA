@@ -44,6 +44,10 @@ naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
   } else if (n <= p) {
     stop('Dimension exceeds sample size.')
   }
+  colNames <- colnames(x)
+  if (is.null(colNames)) {
+    colNames <- paste("V", 1:p, sep = '')
+  }
   ## reorder data to form contiguous blocks with the same pattern ##
   hasValue <- !is.na(x) # R matrix
   respPerVar <- colSums(hasValue)
@@ -70,7 +74,7 @@ naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
      stop('Missingness is too strong! Estimator cannot converge.')
   }
   res <- list(data=as.matrix(x), permutation=xIdx, rowPermutation=blockInfo$order,
-              N=N, D=D, P=P, kn=respPerVar/n, kp=respPerVar/p)
+              N=N, D=D, P=P, kn=respPerVar/n, colNames = colNames)
   class(res) <- "naBlocks"
   if (plot) {
     plot(res)
@@ -80,6 +84,9 @@ naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
 
 
 #' plot missingness pattern of data
+#'
+#' @param x A `naBlocks` object
+#' @param ... additional parameters
 #'
 #' @export
 #' @examples
@@ -180,23 +187,30 @@ grayscale <- function(A) {
 #'
 #' Only print M-estimates and alpha level
 #'
+#' @param x A `shapeNA` object
+#' @param ... Additional parameters.
+#'
 #' @export
 #' @examples
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
 #'     res <- tylerShape(x)
 #'     res ## equivalent to call print(res)
-print.shapeNA <- function(obj) {
-  if (is.null(obj$mu)) {
-    print(list(alpha=obj$alpha, S=obj$S))
+print.shapeNA <- function(x, ...) {
+  if (is.null(x$mu)) {
+    print(list(alpha=x$alpha, S=x$S), ...)
   } else {
-    print(list(alpha=obj$alpha, S=obj$S, mu=obj$mu))
+    print(list(alpha=x$alpha, S=x$S, mu=x$mu), ...)
   }
 }
 
 #' Crude visualization of shape estimate
 #'
-#' If estimate comes from missing data, additionally the columns are
-#' marked with a colored bar, indicating their missingness proportion
+#' Plot each matrix entry as a cell, with dark cells indicating high values and
+#' light values indicate small values.
+#'
+#' @param x A `shapeNA` oopbject
+#' @param message A logical, If `TRUE`, a similar summary is printed in the console.
+#' @param ... Additional parameters.
 #'
 #' @export
 #' @examples
@@ -204,29 +218,21 @@ print.shapeNA <- function(obj) {
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- tylerShapeNA(y)
 #'     plot(res)
-plot.shapeNA <- function(obj, legend=TRUE, message=TRUE) {
-  S <- grayscale(obj$S)
-  p <- nrow(S)
-  plot(1, type = "n", xlim = c(0, p*1.25), ylim = c(0, p+1),
-       axes=FALSE, xlab=NA, ylab=NA)
-  for (i in 1:p) {
-    for (j in 1:p) {
-      rect(i-1, j-1, i, j, col=gray(S[i,j]))
-    }
-  }
-  if (!is.null(obj$naBlocks)) {
-    k <- obj$naBlocks$kn
-  topocolors <- rainbow(12)[1:10]
-  for (i in 1:p) {
-    rect(i-k[i], p+0.5, i, p+1, col=topocolors[ceiling(10*k[i])])
-  }
-  if (legend) {
-    legend(p+0.3, p+0.8, (10:1)/10, col=rev(topocolors),
-           horiz = FALSE, pch=20, ncol=2)
-  }
-  if (!is.null(obj$naBlocks) && message) {
-    message(paste("% of total obs:", paste(round(obj$naBlocks$kn,2), collapse = "\t")))
-  }
+plot.shapeNA <- function(x, message=TRUE, ...) {
+  imageS <- x$S
+  p <- ncol(imageS)
+  vars <- x$naBlocks$colNames
+  ## "flip" image to have 1st entry in lower left corner
+  imageS <- t(imageS[p:1,])
+  graphics::image(imageS, xaxt = 'n', yaxt = 'n', ...)
+  axis(side = 1, at = seq(0, 1, length.out = p),
+       labels = vars, lwd = 0)
+  if (!is.null(x$naBlocks) && message) {
+    df <- data.frame(
+      Variables = vars,
+      Observed = round(x$naBlocks$kn, 2),
+      row.names = NULL)
+    format(df)
   }
 }
 
@@ -295,40 +301,65 @@ getMissingnessBlocks <- function(R) {
   return(list(order=rowOrder, rle = rle(pattern[rowOrder])))
 }
 
-#' Print missingness pattern
+#' Print Missingness Pattern
 #'
-#' @export
-print.naBlocks <- function(obj) {
-  p <- length(obj$permutation)
-  pattern <- sapply(obj$P, asBinaryVector, d=p, logical=FALSE)
-  res <- matrix(c(t(pattern), D=p-obj$D), nrow=length(obj$N))
-  rCount <- c(obj$N, 0) - c(0, obj$N)
-  row.names(res) <- rCount[1:length(obj$N)]
-  colNames <- c(paste("V", obj$permutation, sep=""), " #")
-  colnames(res) <- colNames
-  print(res)
-}
-
-#' Barplot showcasing missingness proportion of the original data
+#' Print the pattern of missingness in the supplied data, as a matrix for 1s,
+#' representing a column vector of responses and 0s, representing a column vector
+#' of `NA`s.
+#'
+#' The first row shows the column names. The leftmost column, without column names,
+#'  shows the number of rows per block and the rightmost column, titled with `#`
+#'  shows the number of observed variables in the block.
+#'
+#' @param x A `naBlocks` object
+#' @param ... Additional parameters.
 #'
 #' @export
 #' @examples
-#'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+#'     x <- mvtnorm::rmvnorm(200, mean = c(0, 0))
+#'     classicShape(x)
+print.naBlocks <- function(x, ...) {
+  p <- length(x$permutation)
+  pattern <- sapply(x$P, asBinaryVector, d=p, logical=FALSE)
+  res <- matrix(c(t(pattern), D=p-x$D), nrow=length(x$N))
+  rCount <- c(x$N, 0) - c(0, x$N)
+  row.names(res) <- rCount[1:length(x$N)]
+  colNames <- c(paste("V", x$permutation, sep=""), " #")
+  colnames(res) <- colNames
+  print(res, ...)
+}
+
+#' Barplot Showcasing Missingness Proportion of the Original Data
+#'
+#' Visualize the proportion of missingness per variable in a barplot.
+#'
+#' @param obj A `naBlocks` object
+#' @param sortNA A logical. If `FALSE` the original variable order is kept,
+#'     else the variables are ordered from least to most missingness
+#' @param ... Additional graphical arguments for \code{\link[graphics]{barplot}}
+#'
+#' @export
+#' @examples
+#'     S <- toeplitz(seq(1, 0.1, length.out = 3))
+#'     x <- mvtnorm::rmvt(100, S, df = 5)
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- classicShapeNA(y)
-#'     barplot(res$naBlocks)
-barplot.naBlocks <- function(obj, sortNA=FALSE) {
+#'     barplotMissProp(res$naBlocks)
+barplotMissProp <- function(obj, sortNA = FALSE, ...) {
+  if (is.null(obj$data)) {
+    stop('No missing values in the data.')
+  }
   mprop <- colSums(is.na(obj$data))/nrow(obj$data)
   if (!sortNA) {
     mprop <- mprop[order(obj$permutation)]
   }
-  barplot(mprop)
+  graphics::barplot(mprop, ...)
   invisible(mprop)
 }
 
 #' summary method for class shapeNA
 #'
-#' @param obj an object of class shapeNA, usually from a call to powerShape or similar functions
+#' @param object an object of class shapeNA, usually from a call to powerShape or similar functions
 #' @param ... further arguments
 #'
 #' @return object of class shapeNA
@@ -337,14 +368,14 @@ barplot.naBlocks <- function(obj, sortNA=FALSE) {
 #' @examples
 #'     obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))
 #'     summary(obj)
-summary.shapeNA <- function(obj, ...) {
-  class(obj) <- 'summary.shapeNA'
-  return(obj)
+summary.shapeNA <- function(object, ...) {
+  class(object) <- 'summary.shapeNA'
+  return(object)
 }
 
 #' print method for class summary.shapeNA
 #'
-#' @param obj object returned from summary.shapeNA
+#' @param x object returned from summary.shapeNA
 #' @param ... further arguments
 #'
 #' @return invisibly return NULL
@@ -353,19 +384,19 @@ summary.shapeNA <- function(obj, ...) {
 #' @examples
 #'     obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))
 #'     print(summary(obj))
-print.summary.shapeNA <- function(obj, ...) {
+print.summary.shapeNA <- function(x, ...) {
   cat('Call: ')
-  print(obj$call)
-  cat('---\nalpha:', obj$alpha)
+  print(x$call)
+  cat('---\nalpha:', x$alpha)
   cat('\nCenter:\n')
-  print(obj$mu, digits=3)
+  print(x$mu, digits=3)
   cat('\nShape:\n')
-  print(obj$S, digits=3)
-  if (!is.null(obj$naBlocks)) {
+  print(x$S, digits=3)
+  if (!is.null(x$naBlocks)) {
     cat('\nMissingness pattern:\n')
-    print(obj$naBlocks)
+    print(x$naBlocks)
   }
-  cat('---\nComputed', obj$iterations, 'iterations.\n')
+  cat('---\nComputed', x$iterations, 'iterations.\n')
   invisible(NULL)
 }
 

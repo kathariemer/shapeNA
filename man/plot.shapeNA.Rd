@@ -4,11 +4,18 @@
 \alias{plot.shapeNA}
 \title{Crude visualization of shape estimate}
 \usage{
-\method{plot}{shapeNA}(obj, legend = TRUE, message = TRUE)
+\method{plot}{shapeNA}(x, message = TRUE, ...)
+}
+\arguments{
+\item{x}{A \code{shapeNA} oopbject}
+
+\item{message}{A logical, If \code{TRUE}, a similar summary is printed in the console.}
+
+\item{...}{Additional parameters.}
 }
 \description{
-If estimate comes from missing data, additionally the columns are
-marked with a colored bar, indicating their missingness proportion
+Plot each matrix entry as a cell, with dark cells indicating high values and
+light values indicate small values.
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)

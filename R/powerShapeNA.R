@@ -77,7 +77,7 @@
 #'     summary(res0)
 #'     ## Inspect missingness pattern
 #'     plot(res0$naBlocks)
-#'     barplot(res0$naBlocks)
+#'     barplotMissProp(res0$naBlocks)
 powerShapeNA <- function(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6) {
   if (!any(is.na(x))) {
     stop("No missing values found. Use powerShape().")

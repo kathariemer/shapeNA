@@ -85,9 +85,9 @@ Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to th
 Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569.
 }
 \seealso{
-powerShapeNA
+\link{powerShapeNA}
 
-tylerShapeNA
+\link{tylerShapeNA}
 
-classicShapeNA
+\link{classicShapeNA}
 }

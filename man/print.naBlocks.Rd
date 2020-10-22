@@ -2,10 +2,26 @@
 % Please edit documentation in R/utils.R
 \name{print.naBlocks}
 \alias{print.naBlocks}
-\title{Print missingness pattern}
+\title{Print Missingness Pattern}
 \usage{
-\method{print}{naBlocks}(obj)
+\method{print}{naBlocks}(x, ...)
+}
+\arguments{
+\item{x}{A \code{naBlocks} object}
+
+\item{...}{Additional parameters.}
 }
 \description{
-Print missingness pattern
+Print the pattern of missingness in the supplied data, as a matrix for 1s,
+representing a column vector of responses and 0s, representing a column vector
+of \code{NA}s.
+}
+\details{
+The first row shows the column names. The leftmost column, without column names,
+shows the number of rows per block and the rightmost column, titled with \verb{#}
+shows the number of observed variables in the block.
+}
+\examples{
+    x <- mvtnorm::rmvnorm(200, mean = c(0, 0))
+    classicShape(x)
 }

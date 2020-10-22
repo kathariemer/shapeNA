@@ -4,10 +4,10 @@
 \alias{print.summary.shapeNA}
 \title{print method for class summary.shapeNA}
 \usage{
-\method{print}{summary.shapeNA}(obj, ...)
+\method{print}{summary.shapeNA}(x, ...)
 }
 \arguments{
-\item{obj}{object returned from summary.shapeNA}
+\item{x}{object returned from summary.shapeNA}
 
 \item{...}{further arguments}
 }

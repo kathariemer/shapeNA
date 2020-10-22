@@ -4,10 +4,10 @@
 \alias{summary.shapeNA}
 \title{summary method for class shapeNA}
 \usage{
-\method{summary}{shapeNA}(obj, ...)
+\method{summary}{shapeNA}(object, ...)
 }
 \arguments{
-\item{obj}{an object of class shapeNA, usually from a call to powerShape or similar functions}
+\item{object}{an object of class shapeNA, usually from a call to powerShape or similar functions}
 
 \item{...}{further arguments}
 }

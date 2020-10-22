@@ -6,6 +6,11 @@
 \usage{
 \method{plot}{naBlocks}(x, orderProp = TRUE, ...)
 }
+\arguments{
+\item{x}{A \code{naBlocks} object}
+
+\item{...}{additional parameters}
+}
 \description{
 plot missingness pattern of data
 }

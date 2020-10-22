@@ -85,7 +85,7 @@ tailed data the index should be chosen closer to 0.
     summary(res0)
     ## Inspect missingness pattern
     plot(res0$naBlocks)
-    barplot(res0$naBlocks)
+    barplotMissProp(res0$naBlocks)
 }
 \references{
 Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. \url{doi:10.1016/j.csda.2009.08.019}.
