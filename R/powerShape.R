@@ -53,8 +53,9 @@
 #' @return a shapeNA object, which contains a shape and center estimate
 #' @export
 #'
-#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54(2), 374-393.
-#' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569.
+#' @references Tyler, D.E. (1987). A Distribution-Free M-Estimator of Multivariate Scatter. The Annals of Statistics, 15, 234.251. <doi:10.1214/aos/1176350263>.
+#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. <doi:10.1016/j.csda.2009.08.019>.
+#' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. <doi:10.1016/j.jmva.2019.104569>.
 #'
 #' @seealso [powerShapeNA], [tylerShapeNA] and [classicShapeNA] for the
 #'     corresponding functions for data with missing values.
