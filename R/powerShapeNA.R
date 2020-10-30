@@ -48,11 +48,16 @@
 #' @param maxiter A positive integer, restricting the maximum number of iterations.
 #' @param eps A numeric, specifying tolerance level of when the iteration stops.
 #'
-#' @return A `shapeNA` object with a shape estimate `S` and either a center `mu`,
-#'   which was either the supplied `center` vector or has been estimated.
+#' @return A list with class 'shapeNA' containing the following components:
+#' \describe{
+#'   \item{S}{the estimated shape matrix}
+#'   \item{mu}{the location parameter, either provided by the user or estimated}
+#'   \item{What}{else}
+#' }
+#' 
 #' @export
 #'
-#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler’s M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. <doi:10.1016/j.csda.2009.08.019>.
+#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. <doi:10.1016/j.csda.2009.08.019>.
 #' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. <doi:10.1016/j.jmva.2019.104569>.
 #'
 #' @seealso [powerShape], [tylerShape] and [classicShape] for the
