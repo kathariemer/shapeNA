@@ -9,7 +9,8 @@ ellipseShape(obj, idx = 1:2, n = 250)
 \arguments{
 \item{obj}{A \code{shapeNA} object}
 
-\item{idx}{A vector of two distinct indices which specify the submatrix}
+\item{idx}{A vector of two distinct indices which specify the variables for
+whose subspace a circle with mahalanobis distance 1 gets returned}
 
 \item{n}{number of points on the ellipse}
 }
@@ -28,9 +29,9 @@ distance 1.
     plot(x[, idx])
 
     ## Plot projection of true covariance matrix
-    lines(shapeNA:::ellipse(c(0, 0), S[idx, idx]), col = 2)
+    lines(shapeNA:::ellipse(c(0, 0, 0), S, idx), col = 2)
     ## Plot base-R estimate
-    lines(shapeNA:::ellipse(c(0, 0), cov(x[, idx])), col = 3, lty = 2)
+    lines(shapeNA:::ellipse(c(0, 0, 0), cov(x), idx), col = 3, lty = 2)
     ## Plot M-estimate
     lines(shapeNA:::ellipseShape(obj, idx=idx), col = 4, lty = 2)
 }

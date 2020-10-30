@@ -448,7 +448,8 @@ toCov <- function(obj) {
 #' distance 1.
 #'
 #' @param obj A `shapeNA` object
-#' @param idx A vector of two distinct indices which specify the submatrix
+#' @param idx A vector of two distinct indices which specify the variables for
+#'     whose subspace a circle with mahalanobis distance 1 gets returned
 #' @param n number of points on the ellipse
 #'
 #' @examples
@@ -461,9 +462,9 @@ toCov <- function(obj) {
 #'     plot(x[, idx])
 #'
 #'     ## Plot projection of true covariance matrix
-#'     lines(shapeNA:::ellipse(c(0, 0), S[idx, idx]), col = 2)
+#'     lines(shapeNA:::ellipse(c(0, 0, 0), S, idx), col = 2)
 #'     ## Plot base-R estimate
-#'     lines(shapeNA:::ellipse(c(0, 0), cov(x[, idx])), col = 3, lty = 2)
+#'     lines(shapeNA:::ellipse(c(0, 0, 0), cov(x), idx), col = 3, lty = 2)
 #'     ## Plot M-estimate
 #'     lines(shapeNA:::ellipseShape(obj, idx=idx), col = 4, lty = 2)
 ellipseShape <- function(obj, idx=1:2, n = 250) {
@@ -472,9 +473,7 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
   } else {
     toCov(obj)
   }
-  S <- S[idx, idx]
-  mu <- (obj$mu)[idx]
-  return(ellipse(mu, S, n))
+  return(ellipse(obj$mu, S, idx, n))
 }
 
 #' Ellipse For Covariance Matrix
@@ -482,8 +481,10 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
 #' Given a center and covariance, get (x,y)-coordinates of points, which have
 #' mahalanobis distance 1.
 #'
-#' @param mu A 2-dimensional vector for the ellipse's center
-#' @param S A 2x2 covariance matrix
+#' @param mu A  vector for the ellipse's center
+#' @param S A covariance matrix
+#' @param idx A vector of two distinct indices which specify the variables for
+#'     whose subspace a circle with mahalanobis distance 1 gets returned
 #' @param n number of points on the ellipse
 #'
 #' @examples
@@ -494,10 +495,13 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
 #'     idx <- c(1,3)
 #'     plot(x[, idx])
 #'     ## Plot projection of true covariance matrix
-#'     lines(shapeNA:::ellipse(c(0, 0), S[idx, idx]), col = 2)
-ellipse <- function(mu, S, n = 250) {
+#'     lines(shapeNA:::ellipse(c(0, 0, 0), S, idx), col = 2)
+ellipse <- function(mu, S, idx, n = 250) {
   t <- seq(0, 2*pi, length.out = n)
   circle <- matrix(c(cos(t), sin(t)), ncol = 2)
-  m <- sqrt(stats::mahalanobis(circle, mu, S))
-  return(sweep(circle, 1, m, FUN = '/'))
+  X <- matrix(0, nrow = n, ncol = ncol(S))
+  X[, idx] <- circle
+  m <- sqrt(stats::mahalanobis(X, mu, S))
+  ell <- sweep(X, 1, m, FUN = '/')
+  return(ell[, idx])
 }
