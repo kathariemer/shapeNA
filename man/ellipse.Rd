@@ -30,3 +30,4 @@ mahalanobis distance 1.
     ## Plot projection of true covariance matrix
     lines(shapeNA:::ellipse(c(0, 0, 0), S, idx), col = 2)
 }
+\keyword{internal}

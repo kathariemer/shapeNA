@@ -35,3 +35,4 @@ distance 1.
     ## Plot M-estimate
     lines(shapeNA:::ellipseShape(obj, idx=idx), col = 4, lty = 2)
 }
+\keyword{internal}

@@ -18,12 +18,12 @@ Authors@R:
              family = "Radojicic",
              role = c("aut"),
              comment = c(ORCID = "0000-0003-0329-0595"))) 
-Description: This package allows to compute power M-estimators for shape and 
-    location. Power M-estimators generalize both the empirical covariance estimates 
-    and Tyler's M-estimate of scatter. Methods for both complete data, as well as
-    data with missing values are supplied.
-    Additionally, the package contains some basic plotting functions, which aid
-    in visualization of the results.
+Description: This package allows to compute power M-estimators for shape and location. 
+    Power M-estimators generalize both the empirical covariance estimates and Tyler's 
+    M-estimate of scatter. Methods for both complete data, as well as data with missing 
+    values are supplied.
+    Additionally, the package contains some basic plotting functions, which aid in 
+    visualization of the results.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

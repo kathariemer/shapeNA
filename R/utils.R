@@ -471,6 +471,8 @@ shape2scatter <- function(obj) {
 #'     whose subspace a circle with mahalanobis distance 1 gets returned
 #' @param n number of points on the ellipse
 #'
+#' @keywords internal
+#'
 #' @examples
 #'     S <- toeplitz(c(1, 0.3, 0.7))
 #'     set.seed(123)
@@ -505,6 +507,8 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
 #' @param idx A vector of two distinct indices which specify the variables for
 #'     whose subspace a circle with mahalanobis distance 1 gets returned
 #' @param n number of points on the ellipse
+#'
+#' @keywords internal
 #'
 #' @examples
 #'     S <- toeplitz(c(1, 0.3, 0.7))
