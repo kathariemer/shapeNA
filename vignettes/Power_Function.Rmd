@@ -1,0 +1,53 @@
+---
+title: "Power_Function"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Power_Function}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(shapeNA)
+```
+
+The shape estimate is the solution to the following fixed point equation
+
+$$\hat\Sigma = \frac1n\sum_{i=1}^n w(\xi_i) (X_i - \hat\mu)(X_i - \hat\mu)^\top,$$
+where $\xi_i = (X_i - \hat\mu)^\top \hat\Sigma^{-1}(X_i - \hat\mu)$ is the squared mahalanobis distance for the observation from individual $i$. Let $B$ denote the beta function. For the Power M-estimator, which generalizes both the classical scatter estimate as well as Tyler's M-estimate, the weight function $w$ is defined as follows:
+
+\begin{equation}\label{powerWeight}
+w_{p, p_r, \alpha}(\xi) = \frac{B\left(\frac{p_r}{2} + 1, \frac{p - p_r}{2}\right)}{B\left(\frac{p_r}{2} + 1 - \alpha, \frac{p - p_r}{2}\right)} \left(\frac{\xi}{p}\right)^{-\alpha}
+\end{equation}
+
+In addition to the parameter $\alpha$, which denotes the _tail index_, the weight function is also dependent on the dimensionality of the data $p$ as well as the number of observed responses $p_r$. If all data are observed, the equation above simplifies to 
+
+\begin{equation}\label{noMD}
+w_{p, \alpha}(\xi) = \left(\frac{\xi}{p}\right)^{-\alpha}
+\end{equation}
+
+From this equation, it is straightforward to deduce the role of the tail index $\alpha$: for $\alpha = 0$, all observations are equally weighted. The larger $\alpha$ is chosen, the quicker the weight function goes to 0. The presence of missing data does not change this behaviour in dependence of $\alpha$.  
+
+This demonstrates, how the tail index should be chosen in accordance to the distribution of the data. For heavy tailed data, a larger tail index is recommended.
+
+```{r, echo = FALSE}
+x <- seq(0, 2, length.out = 200)
+plot(x, 1/x, ylim = c(0, 2), type = 'l', xlab = 'squared mahalanobis distance', ylab = 'power weight function')
+lines(x, (1/x)^(2/3), col = 2, lty = 2)
+lines(x, (1/x)^(1/3), col = 3, lty = 3)
+lines(x, rep(1, 200), col = 4, lty = 4)
+```
+
+In the plot, we have
+
+* `alpha = 1` in a black line,
+* `alpha = 2/3` in a red, dashed line,
+* `alpha = 1/3` in a green, dotted line and
+* `alpha = 0` in a blue, dashed and dotted line.
