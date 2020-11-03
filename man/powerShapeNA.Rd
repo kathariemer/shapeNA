@@ -39,9 +39,13 @@ The possible values are \itemize{
 \value{
 A list with class 'shapeNA' containing the following components:
 \describe{
-\item{S}{the estimated shape matrix}
-\item{mu}{the location parameter, either provided by the user or estimated}
-\item{What}{else}
+\item{S}{the estimated shape matrix.}
+\item{scale}{the scale with which the shape matrix may be scaled to obtain a scatter estimate. If \code{alpha} == 1, then this value is meaningless.}
+\item{mu}{the location parameter, either provided by the user or estimated.}
+\item{alpha}{the tail index with which the Power M-estimator has been called.}
+\item{naBlocks}{an \code{naBlocks} object, with information about the missingness of the data.}
+\item{iterations}{number of computed iterations before convergence.}
+\item{call}{the matched call.}
 }
 }
 \description{
@@ -89,7 +93,7 @@ tailed data the index should be chosen closer to 0.
     summary(res0)
     ## Inspect missingness pattern
     plot(res0$naBlocks)
-    barplotMissProp(res0$naBlocks)
+    barplotMissProp(res0)
 }
 \references{
 Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. \url{doi:10.1016/j.csda.2009.08.019}.

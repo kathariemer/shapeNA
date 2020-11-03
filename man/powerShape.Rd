@@ -36,10 +36,16 @@ The possible values are \itemize{
 \item{eps}{A numeric, specifying tolerance level of when the iteration stops.}
 }
 \value{
-A \code{shapeNA} object with a shape estimate \code{S} and either a center \code{mu},
-which was either the supplied \code{center} vector or has been estimated.
-
-a shapeNA object, which contains a shape and center estimate
+A list with class 'shapeNA' containing the following components:
+\describe{
+\item{S}{the estimated shape matrix.}
+\item{scale}{the scale with which the shape matrix may be scaled to obtain a scatter estimate. If \code{alpha} == 1, then this value is meaningless.}
+\item{mu}{the location parameter, either provided by the user or estimated.}
+\item{alpha}{the tail index with which the Power M-estimator has been called.}
+\item{naBlocks}{\code{NULL}, since \code{powerShape} operates only on complete data.}
+\item{iterations}{number of computed iterations before convergence.}
+\item{call}{the matched call.}
+}
 }
 \description{
 \code{powerShape}, \code{tylerShape} and \code{classicShape} compute

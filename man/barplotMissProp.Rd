@@ -7,7 +7,7 @@
 barplotMissProp(obj, sortNA = FALSE, ...)
 }
 \arguments{
-\item{obj}{A \code{naBlocks} object}
+\item{obj}{A \code{shapeNA} object}
 
 \item{sortNA}{A logical. If \code{FALSE} the original variable order is kept,
 else the variables are ordered from least to most missingness}
@@ -22,7 +22,7 @@ Visualize the proportion of missingness per variable in a barplot.
     x <- mvtnorm::rmvt(100, S, df = 5)
     y <- mice::ampute(x, mech='MCAR')$amp
     res <- classicShapeNA(y)
-    barplotMissProp(res$naBlocks)
+    barplotMissProp(res)
 }
 \seealso{
 \code{\link[graphics]{barplot}}

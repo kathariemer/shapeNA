@@ -47,10 +47,17 @@
 #' @param maxiter A positive integer, restricting the maximum number of iterations.
 #' @param eps A numeric, specifying tolerance level of when the iteration stops.
 #'
-#' @return A `shapeNA` object with a shape estimate `S` and either a center `mu`,
-#'   which was either the supplied `center` vector or has been estimated.
+#' @return A list with class 'shapeNA' containing the following components:
+#' \describe{
+#'   \item{S}{the estimated shape matrix.}
+#'   \item{scale}{the scale with which the shape matrix may be scaled to obtain a scatter estimate. If `alpha` == 1, then this value is meaningless.}
+#'   \item{mu}{the location parameter, either provided by the user or estimated.}
+#'   \item{alpha}{the tail index with which the Power M-estimator has been called.}
+#'   \item{naBlocks}{`NULL`, since `powerShape` operates only on complete data.}
+#'   \item{iterations}{number of computed iterations before convergence.}
+#'   \item{call}{the matched call.}
+#' }
 #'
-#' @return a shapeNA object, which contains a shape and center estimate
 #' @export
 #'
 #' @references Tyler, D.E. (1987). A Distribution-Free M-Estimator of Multivariate Scatter. The Annals of Statistics, 15, 234.251. <doi:10.1214/aos/1176350263>.

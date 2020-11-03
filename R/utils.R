@@ -328,7 +328,7 @@ print.naBlocks <- function(x, ...) {
 #'
 #' Visualize the proportion of missingness per variable in a barplot.
 #'
-#' @param obj A `naBlocks` object
+#' @param obj A `shapeNA` object
 #' @param sortNA A logical. If `FALSE` the original variable order is kept,
 #'     else the variables are ordered from least to most missingness
 #' @param ... Additional graphical arguments for \code{\link[graphics]{barplot}}
@@ -341,14 +341,15 @@ print.naBlocks <- function(x, ...) {
 #'     x <- mvtnorm::rmvt(100, S, df = 5)
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- classicShapeNA(y)
-#'     barplotMissProp(res$naBlocks)
+#'     barplotMissProp(res)
 barplotMissProp <- function(obj, sortNA = FALSE, ...) {
-  if (is.null(obj$data)) {
+  if (is.null(obj$naBlocks)) {
     stop('No missing values in the data.')
   }
-  mprop <- colSums(is.na(obj$data))/nrow(obj$data)
+  blocks <- obj$naBlocks
+  mprop <- colSums(is.na(blocks$data))/nrow(blocks$data)
   if (!sortNA) {
-    mprop <- mprop[order(obj$permutation)]
+    mprop <- mprop[order(blocks$permutation)]
   }
   graphics::barplot(mprop, ...)
   invisible(mprop)
@@ -433,10 +434,28 @@ normalizationFunction <- function(normalization) {
   return(scatterNormFct)
 }
 
-# for power M-estimates with alpha < 1: restore covariance estimate
-toCov <- function(obj) {
+#' Scatter Estimates from shapeNA object
+#'
+#' For Power M-estimates with tail index `alpha` < 1, the resulting estimate
+#' has a scale. For these cases, a scatter estimate can be computed. Results from
+#' `tylerShape` and `tylerShapeNA` give no scatter estimates.
+#'
+#' @param obj shapeNA object, resulting from a call to `powerShape()` and other
+#'  functions from the same family.
+#'
+#' @return scatter matrix estimate, or `NA` if `alpha` == 1
+#' @export
+#'
+#' @examples
+#'     S <- toeplitz(c(1, 0.3, 0.7))
+#'     set.seed(123)
+#'     x <- mvtnorm::rmvt(100, S, df = 3)
+#'     obj <- powerShape(x, alpha = 0.85)
+#'     shape2scatter(obj)
+shape2scatter <- function(obj) {
   if (obj$alpha == 1) {
-    stop("Covariance matrix for Tyler's M-estimate undefined")
+    message("Covariance matrix for Tyler's M-estimate undefined")
+    return(NA)
   }
   return(obj$scale * obj$S)
 }
@@ -471,7 +490,7 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
   S <- if (obj$alpha == 1) {
     obj$S
   } else {
-    toCov(obj)
+    shape2scatter(obj)
   }
   return(ellipse(obj$mu, S, idx, n))
 }

@@ -50,11 +50,15 @@
 #'
 #' @return A list with class 'shapeNA' containing the following components:
 #' \describe{
-#'   \item{S}{the estimated shape matrix}
-#'   \item{mu}{the location parameter, either provided by the user or estimated}
-#'   \item{What}{else}
+#'   \item{S}{the estimated shape matrix.}
+#'   \item{scale}{the scale with which the shape matrix may be scaled to obtain a scatter estimate. If `alpha` == 1, then this value is meaningless.}
+#'   \item{mu}{the location parameter, either provided by the user or estimated.}
+#'   \item{alpha}{the tail index with which the Power M-estimator has been called.}
+#'   \item{naBlocks}{an `naBlocks` object, with information about the missingness of the data.}
+#'   \item{iterations}{number of computed iterations before convergence.}
+#'   \item{call}{the matched call.}
 #' }
-#' 
+#'
 #' @export
 #'
 #' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. <doi:10.1016/j.csda.2009.08.019>.
@@ -85,7 +89,7 @@
 #'     summary(res0)
 #'     ## Inspect missingness pattern
 #'     plot(res0$naBlocks)
-#'     barplotMissProp(res0$naBlocks)
+#'     barplotMissProp(res0)
 powerShapeNA <- function(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6) {
   if (!any(is.na(x))) {
     stop("No missing values found. Use powerShape().")
