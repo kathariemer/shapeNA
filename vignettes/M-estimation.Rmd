@@ -43,32 +43,34 @@ round(SigmaHat, 2)
 
 Clearly, the computed scatter matrix differs quite a bit from the true covariance matrix. This is due to the fact, that the sample covariance matrix is heavily influenced by outliers.
 
-We may plot both the true parameters and the estimated parameters. The red ellipse represents the points in the plane, which for the true location and scatter, have mahalanobis distance 1. We can see, that the classical estimator, the represented by the dashed green line, clearly overestimates the size of the covariance matrix.
+We may plot both the true parameters and the estimated parameters. The red ellipse represents the points in the plane, which for the true location and scatter, have mahalanobis distance 1. We can see, that the classical estimator, the represented by the dashed black line, clearly overestimates the size of the covariance matrix.
 
-```{r, out.width="50%"}
-plot(X, col = 8, pch = 16, cex = 0.5)
+```{r, echo=FALSE}
+par(mar = c(4,4,0,0)+0.1)
+plot(X, col = 8, cex = 0.5, xlab='X1', ylab='X2')
 lines(shapeNA:::ellipse(mu, S), col = 2, lwd = 2)
 points(t(mu), col = 2, pch = 3, lwd = 2)
-lines(shapeNA:::ellipse(muHat, SigmaHat), col = 3, lty = 3, lwd = 2)
-points(t(muHat), col = 3, pch = 4, lwd = 2)
+lines(shapeNA:::ellipse(muHat, SigmaHat), col = 1, lty = 3, lwd = 2)
+points(t(muHat), col = 1, pch = 4, lwd = 2)
 ```
 
 The power M-estimators give, with increasing `alpha`, closer estimates. The parameter `alpha` is also considered to be a tail index, and should be chosen according to the heavyness of the data's tails. In the following plot, 
 
-* the red line represents the classical scatter estimate (`alpha == 0`), 
+* the red line represents the classical scatter estimate (`alpha = 0`), 
 * the dashed green line comes from an estimate with `alpha = 1/3` and
 * the dotted blue line comes from an estimate with `alpha = 2/3`.
 
-```{r}
-plot(X, xlim = c(-0.1, 2), ylim = c(-0.1, 2), col = 8, pch = 16)
+```{r, echo = FALSE}
+par(mar = c(4,4,0,0)+0.1)
+plot(X, xlim = c(-0.1, 2), ylim = c(-0.1, 2), col = 8, xlab='X1', ylab='X2')
 for (i in 1:3) {
   res <- powerShape(X, alpha = (i-1)/3)
-  lines(shapeNA:::ellipseShape(res), col = i+1, lwd = 2, lty = i)
+  lines(shapeNA:::ellipseShape(res), col = i+1, lwd = 2.5, lty = i)
   points(t(res$mu), col = i+1, pch = i+1)
 }
 ```
 
-In the special case of `alpha == 0`, we get the traditional covariance and location estimate:
+In the special case of `alpha = 0`, we get the traditional covariance and location estimate:
 
 ```{r}
 res <- powerShape(X, alpha = 0)
