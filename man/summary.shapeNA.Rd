@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{summary.shapeNA}
 \alias{summary.shapeNA}
-\title{Summary Method for Class \code{shapeNA}}
+\title{Summary Method For Class \code{shapeNA}}
 \usage{
 \method{summary}{shapeNA}(object, ...)
 }
@@ -12,7 +12,7 @@
 \item{...}{further arguments}
 }
 \description{
-Summary Method for Class \code{shapeNA}
+Summary Method For Class \code{shapeNA}
 }
 \examples{
     obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))

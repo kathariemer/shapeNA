@@ -12,7 +12,7 @@
 \item{message}{A logical, If \code{TRUE}, the percentage of observed values per
 variable is printed in the console.}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional parameters passed to \code{\link[graphics]{image}}.}
 }
 \description{
 Plot each matrix entry as a cell, with dark cells indicating high values and

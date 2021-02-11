@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{print.summary.shapeNA}
 \alias{print.summary.shapeNA}
-\title{Print Method for Class \code{summary.shapeNA}}
+\title{Print Method For Class \code{summary.shapeNA}}
 \usage{
 \method{print}{summary.shapeNA}(x, ...)
 }
@@ -15,7 +15,7 @@
 invisibly return NULL
 }
 \description{
-Print Method for Class \code{summary.shapeNA}
+Print Method For Class \code{summary.shapeNA}
 }
 \examples{
     obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))

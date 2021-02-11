@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A \code{naBlocks} object}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional parameters passed to \code{\link[base]{print}}.}
 }
 \description{
 Print the pattern of missingness in the supplied data, as a matrix for 1s,

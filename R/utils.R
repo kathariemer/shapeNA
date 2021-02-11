@@ -2,37 +2,37 @@
 #'
 #' Reorder a data set with `NA` entries to form blocks of missing values. The resulting
 #' data will have increasing missingness along the rows and along the columns. The rows
-#' are ordered s.t. the first block consists of complete observations, and
+#' are ordered such that the first block consists of complete observations, and
 #' the following blocks are ordered from most frequent missingness pattern to least
 #' frequent missingness pattern.
-#' This method may fail, as it has been designed as a preprocessing step for
-#' shape estimations.
+#' This method may fail if the missingness is too strong or if the number of
+#' observations is too low (the number of observations has to exceed the number
+#' of variables), as it has been designed as a preprocessing step for shape estimations.
 #'
-#' @param data A matrix with `NA` values
+#' @param data A matrix with `NA` values.
 #' @param cleanup A logical flag. If `TRUE`, observations with less than 2 responses
-#'    are discarded
+#'    are discarded.
 #' @param plot A logical flag. If true, a plot of the missingness pattern is produced.
 #'
-#' @return a `naBlocks` object, which is a list with \itemize{
-#'     \item `data` the reordered data matrix
-#'     \item `permutation` the permutation of the columns, which was applied to reorder
-#'         the columns according to the number of `NA`s
-#'     \item `rowPermutation` the permutation of the rows, which generates the blocks
-#'     \item `N` a vector of all row indices. Each row number points to the beginning
-#'         of a new missingness pattern
-#'     \item `D` a vector specifying the missingness pattern for each block.
-#'     \item `P` a vector specifying the number of observed variables per block.
-#'     \item `kn` a vector specifying the percentage of observed responses per variable.
+#' @returnA list of class `naBlocks` with components: \describe{
+#'     \item{`x`} the reordered data matrix.
+#'     \item{`permutation`} the permutation of the columns which was applied to reorder
+#'         the columns according to the number of `NA`s.
+#'     \item{`rowPermutation`} the permutation of the rows which generates the blocks.
+#'     \item{`N`} a vector of all row indices. Each row number points to the beginning
+#'         of a new missingness pattern.
+#'     \item{`D`} a vector specifying the missingness pattern for each block.
+#'     \item{`P`} a vector specifying the number of observed variables per block.
+#'     \item{`kn`} a vector specifying the percentage of observed responses per variable.
 #' }
-naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
+naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
   ## remove observations without responses or only 1 response ##
-  x <- data
   if (cleanup) {
     hasValue <- !is.na(x) # R matrix
     #rmIdx <- apply(hasValue, 1, function(x) sum(x) <=1)
     rmIdx <- rowSums(hasValue)<=1
     if (any(rmIdx)) {
-      x <- data[!rmIdx, ]
+      x <- x[!rmIdx, ]
       message(paste("Removed", sum(rmIdx), "observations with less than 2 responses each."))
     }
   }
@@ -83,10 +83,10 @@ naBlocks <- function(data, cleanup=TRUE, plot=FALSE) {
 }
 
 
-#' Plot Missingness Pattern of Data
+#' Function to visualize the missing patterns for objects of class `naBlocks`.
 #'
-#' @param x A `naBlocks` object
-#' @param ... additional parameters
+#' @param x A `naBlocks` object.
+#' @param ... Additional parameters passed on to \code{\link[graphics]{rect}}.
 #'
 #' @export
 #' @examples
@@ -98,7 +98,7 @@ plot.naBlocks <- function(x, ...) {
   idx <- x$N
   bprop <- (idx - c(0, idx[-length(idx)]))/nrow(x$data)
   bIdx <- 1:length(idx)
-  plotAsBoolMat(x$data[idx,], round(bprop,3))
+  plotAsBoolMat(x$data[idx,], round(bprop,3), ...)
   invisible(bprop)
 }
 
@@ -182,7 +182,7 @@ grayscale <- function(A) {
 #' Print alpha level, shape estimate and center.
 #'
 #' @param x A `shapeNA` object
-#' @param ... Additional parameters.
+#' @param ... Additional parameters passed to lower level \code{\link[base]{print}}.
 #'
 #' @export
 #' @examples
@@ -205,7 +205,7 @@ print.shapeNA <- function(x, ...) {
 #' @param x A `shapeNA` oopbject
 #' @param message A logical, If `TRUE`, the percentage of observed values per
 #'     variable is printed in the console.
-#' @param ... Additional parameters.
+#' @param ... Additional parameters passed to \code{\link[graphics]{image}}.
 #'
 #' @export
 #' @examples
@@ -307,7 +307,7 @@ getMissingnessBlocks <- function(R) {
 #'  shows the number of observed variables in the block.
 #'
 #' @param x A `naBlocks` object
-#' @param ... Additional parameters.
+#' @param ... Additional parameters passed to \code{\link[base]{print}}.
 #'
 #' @export
 #' @examples
@@ -331,7 +331,7 @@ print.naBlocks <- function(x, ...) {
 #' @param obj A `shapeNA` object
 #' @param sortNA A logical. If `FALSE` the original variable order is kept,
 #'     else the variables are ordered from least to most missingness
-#' @param ... Additional graphical arguments for \code{\link[graphics]{barplot}}
+#' @param ... Additional graphical arguments passed to \code{\link[graphics]{barplot}}
 #'
 #' @seealso \code{\link[graphics]{barplot}}
 #'
@@ -341,8 +341,8 @@ print.naBlocks <- function(x, ...) {
 #'     x <- mvtnorm::rmvt(100, S, df = 5)
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- classicShapeNA(y)
-#'     barplotMissProp(res)
-barplotMissProp <- function(obj, sortNA = FALSE, ...) {
+#'     barplot(res)
+barplot.shapeNA <- function(obj, sortNA = FALSE, ...) {
   if (is.null(obj$naBlocks)) {
     stop('No missing values in the data.')
   }
@@ -351,11 +351,11 @@ barplotMissProp <- function(obj, sortNA = FALSE, ...) {
   if (!sortNA) {
     mprop <- mprop[order(blocks$permutation)]
   }
-  graphics::barplot(mprop, ...)
+  graphics::barplot(mprop, ..., main = 'Proportion of missing values')
   invisible(mprop)
 }
 
-#' Summary Method for Class `shapeNA`
+#' Summary Method For Class `shapeNA`
 #'
 #' @param object an object of class shapeNA, usually from a call to powerShape or similar functions
 #' @param ... further arguments
@@ -370,7 +370,7 @@ summary.shapeNA <- function(object, ...) {
   return(object)
 }
 
-#' Print Method for Class `summary.shapeNA`
+#' Print Method For Class `summary.shapeNA`
 #'
 #' @param x object returned from summary.shapeNA
 #' @param ... further arguments

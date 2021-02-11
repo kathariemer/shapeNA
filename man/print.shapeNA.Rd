@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A \code{shapeNA} object}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional parameters passed to lower level \code{\link[base]{print}}.}
 }
 \description{
 Print alpha level, shape estimate and center.
