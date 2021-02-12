@@ -2,19 +2,19 @@
 % Please edit documentation in R/utils.R
 \name{shape2scatter}
 \alias{shape2scatter}
-\title{Scatter Estimates from shapeNA object}
+\title{Scatter Estimates from \code{shapeNA} Objects}
 \usage{
 shape2scatter(obj)
 }
 \arguments{
-\item{obj}{shapeNA object, resulting from a call to \code{powerShape()} and other
+\item{obj}{\code{shapeNA} object, resulting from a call to \code{powerShape()} and other
 functions from the same family.}
 }
 \value{
-scatter matrix estimate, or \code{NA} if \code{alpha} == 1
+Scatter matrix estimate, or only \code{NA} if \code{alpha == 1}.
 }
 \description{
-For Power M-estimates with tail index \code{alpha} < 1, the resulting estimate
+For Power M-estimates with tail index \code{alpha < 1}, the resulting estimate
 has a scale. For these cases, a scatter estimate can be computed. Results from
 \code{tylerShape} and \code{tylerShapeNA} give no scatter estimates.
 }
@@ -22,6 +22,10 @@ has a scale. For these cases, a scatter estimate can be computed. Results from
     S <- toeplitz(c(1, 0.3, 0.7))
     set.seed(123)
     x <- mvtnorm::rmvt(100, S, df = 3)
-    obj <- powerShape(x, alpha = 0.85)
-    shape2scatter(obj)
+    obj_det <- powerShape(x, alpha = 0.85, normalization = 'det')
+    shape2scatter(obj_det)
+    obj_tr <- powerShape(x, alpha = 0.85, normalization = 'trace')
+    shape2scatter(obj_tr)
+    obj_one <- powerShape(x, alpha = 0.85, normalization = 'one')
+    shape2scatter(obj_one)
 }

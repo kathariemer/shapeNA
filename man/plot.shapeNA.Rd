@@ -12,15 +12,20 @@
 \item{message}{A logical, If \code{TRUE}, the percentage of observed values per
 variable is printed in the console.}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional parameters passed to \code{\link[graphics]{image}}.}
 }
 \description{
-Plot each matrix entry as a cell, with dark cells indicating high values and
-light values indicate small values.
+Function to visualize the shape matrix from objects of class \code{shapeNA} by
+plotting a heatmap where light colored cells indicate small values and dark
+colored cells indicate high values.
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
     y <- mice::ampute(x, mech='MCAR')$amp
     res <- tylerShapeNA(y)
+    ## default plot
     plot(res)
+    ## plot result in gray scale - reverse order to get a palette starting
+    ## with the lightest instead of the darkest color
+    plot(res, col = gray.colors(9, rev = TRUE))
 }

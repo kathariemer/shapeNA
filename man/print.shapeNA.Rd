@@ -2,17 +2,18 @@
 % Please edit documentation in R/utils.R
 \name{print.shapeNA}
 \alias{print.shapeNA}
-\title{Print Method for Elements of Class \code{shapeNA}}
+\title{Print Method for Objects of Class \code{shapeNA}}
 \usage{
 \method{print}{shapeNA}(x, ...)
 }
 \arguments{
 \item{x}{A \code{shapeNA} object}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional parameters passed to lower level \code{\link[base]{print}}.}
 }
 \description{
-Print alpha level, shape estimate and center.
+Prints the used value of \code{alpha} and the estimated shape and location for
+objects of class \code{shapeNA}.
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)

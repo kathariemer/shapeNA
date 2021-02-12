@@ -7,12 +7,12 @@
 \method{plot}{naBlocks}(x, ...)
 }
 \arguments{
-\item{x}{A \code{naBlocks} object}
+\item{x}{A \code{naBlocks} object.}
 
-\item{...}{additional parameters}
+\item{...}{Additional parameters passed on to \code{\link[graphics]{rect}}.}
 }
 \description{
-Plot Missingness Pattern of Data
+Function to visualize the missing patterns for objects of class \code{naBlocks}.
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)

@@ -7,9 +7,9 @@
 \method{print}{naBlocks}(x, ...)
 }
 \arguments{
-\item{x}{A \code{naBlocks} object}
+\item{x}{An \code{naBlocks} object.}
 
-\item{...}{Additional parameters.}
+\item{...}{Additional parameters passed to \code{\link[base]{print}}.}
 }
 \description{
 Print the pattern of missingness in the supplied data, as a matrix for 1s,
@@ -22,6 +22,8 @@ shows the number of rows per block and the rightmost column, titled with \verb{#
 shows the number of observed variables in the block.
 }
 \examples{
-    x <- mvtnorm::rmvnorm(200, mean = c(0, 0))
-    classicShape(x)
+    x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+    y <- mice::ampute(x, mech='MCAR')$amp
+    res <- classicShapeNA(y)
+    print(res$naBlocks)
 }

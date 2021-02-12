@@ -4,7 +4,7 @@
 \alias{powerShape}
 \alias{tylerShape}
 \alias{classicShape}
-\title{Compute M-Estimators of Shape for Data Without Missing Values}
+\title{M-estimators of Shape from the Power Family.}
 \usage{
 powerShape(x, alpha, center = NULL,
     normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6)
@@ -18,57 +18,64 @@ classicShape(x, center = NULL,
 \arguments{
 \item{x}{A numeric data matrix or data.frame without missing data.}
 
-\item{alpha}{Tail index, a numeric value from the interval \verb{[0, 1]}. Determines
-the power function. For more information see 'Details'.}
+\item{alpha}{Tail index, a numeric value from the interval \code{[0, 1]}.
+Determines the power function. For more information see 'Details'.}
 
-\item{center}{An optional vector of the data's center, if NULL the center
-will be estimated simultaneously to the shape estimate.}
+\item{center}{An optional vector of the data's center, if \code{NULL} the center
+will be estimated simultaneously with the shape estimate.}
 
-\item{normalization}{A string, determines scale of returned shape estimate.
-The possible values are \itemize{
-\item{'det'} s.t. the returned shape estimate has determinant 1.
-\item{'trace'} s.t. the returned shape estimate has trace \code{p}.
-\item{'one'} s.t. the returned shape estimate's first entry is 1.
+\item{normalization}{A string determining how the shape matrix is standardized.
+The possible values are
+\itemize{
+\item{\code{'det'}}{such that the returned shape estimate has determinant 1.}
+\item{\code{'trace'}}{such that the returned shape estimate has trace.}
+\item{\code{'one'}}{such that the returned shape estimate's top left entry
+(\code{S[1, 1]}) is 1.}
 }}
 
 \item{maxiter}{A positive integer, restricting the maximum number of iterations.}
 
-\item{eps}{A numeric, specifying tolerance level of when the iteration stops.}
+\item{eps}{A numeric, specifying the tolerance level of when the iteration stops.}
 }
 \value{
 A list with class 'shapeNA' containing the following components:
-\describe{
-\item{S}{the estimated shape matrix.}
-\item{scale}{the scale with which the shape matrix may be scaled to obtain a scatter estimate. If \code{alpha} == 1, then this value is meaningless.}
-\item{mu}{the location parameter, either provided by the user or estimated.}
-\item{alpha}{the tail index with which the Power M-estimator has been called.}
+\item{S}{The estimated shape matrix.}
+\item{scale}{The scale with which the shape matrix may be scaled to obtain
+a scatter estimate. If \code{alpha} == 1, then this value is \code{NA}, as Tyler's
+shape matrix has no natural scale.}
+\item{mu}{The location parameter, either provided by the user or estimated.}
+\item{alpha}{The tail index with which the Power M-estimator has been called.}
 \item{naBlocks}{\code{NULL}, since \code{powerShape} operates only on complete data.}
-\item{iterations}{number of computed iterations before convergence.}
-\item{call}{the matched call.}
-}
+\item{iterations}{Number of computed iterations before convergence.}
+\item{call}{The matched call.}
 }
 \description{
-\code{powerShape}, \code{tylerShape} and \code{classicShape} compute
-power M-estimators of shape. Using \code{powerShape} and \code{classicShape}
-it is even possible to compute M-estimators of covariance matrices.
-These functions also compute estimates of location if no \code{center} is supplied.
+Power M-estimators of shape and location were recently suggested in
+Frahm et al. (2020). They have a tuning parameter \code{alpha} taking values in
+\code{[0,1]}. The extreme case \code{alpha} = 1 corresponds to Tyler's shape matrix and
+\code{alpha} = 0 to the classical covariance matrix. The special cases have own,
+more efficient functions.
+If the true location is known, it should be supplied as \code{center}, otherwise
+it is estimated simultaneously with the shape.
 }
 \details{
-For multivariate normally distributed data, \code{classicShape} is an
-ML-estimator. This is a special case of the power M-estimator with tail index
-\code{alpha} = 0 and returns the empirical covariance matrix and the empirical mean
-vector.
+These functions assume, that the data were generated from an generalized
+elliptical distribution.
 
-\code{tylerShape} maximizes the likelihood function after projecting the observed
-data of each individual onto the unit hypersphere, in which case we obtain
-an angular central Gaussian distribution. This is a special case of the power
-M-estimator with tail index \code{alpha} = 1 and returns Tyler's M-estimator of
-scatter and an affine equivariant multivariate median.
+For multivariate normally distributed data, \code{classicShape} is the maximum
+likelihood estimator. This is a special case of the power M-estimator with
+tail index \code{alpha} = 0 and returns the empirical covariance matrix and the
+empirical mean vector.
 
-\code{powerShape} requires an additional parameter, the so-called tail index \code{alpha}.
-For asymptotic normality, this index should be chosen taking into consideration
-the data. For heavy tailed data, the index should be closer to 1, for light
-tailed data the index should be chosen closer to 0.
+The function \code{tylerShape} maximizes the likelihood function after projecting
+the observed data of each individual onto the unit hypersphere, in which case
+we obtain an angular central Gaussian distribution. This is a special case of
+the power M-estimator with tail index \code{alpha} = 1 and returns Tyler's
+M-estimator of scatter and an affine equivariant multivariate median.
+
+The function \code{powerShape} requires an additional parameter, the so-called
+tail index \code{alpha}. For heavy tailed data, the index should be closer to 1,
+for light tailed data the index should be chosen closer to 0.
 }
 \examples{
     ## Generate example data
@@ -90,8 +97,6 @@ tailed data the index should be chosen closer to 0.
 }
 \references{
 Tyler, D.E. (1987). A Distribution-Free M-Estimator of Multivariate Scatter. The Annals of Statistics, 15, 234.251. \url{doi:10.1214/aos/1176350263}.
-
-Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. \url{doi:10.1016/j.csda.2009.08.019}.
 
 Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \url{doi:10.1016/j.jmva.2019.104569}.
 }

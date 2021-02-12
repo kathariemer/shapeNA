@@ -2,20 +2,20 @@
 % Please edit documentation in R/utils.R
 \name{print.summary.shapeNA}
 \alias{print.summary.shapeNA}
-\title{Print Method for Class \code{summary.shapeNA}}
+\title{Print Method For Class \code{summary.shapeNA}}
 \usage{
 \method{print}{summary.shapeNA}(x, ...)
 }
 \arguments{
-\item{x}{object returned from summary.shapeNA}
+\item{x}{object returned from \code{\link{summary.shapeNA}}.}
 
-\item{...}{further arguments}
+\item{...}{Further arguments, which will be ignored.}
 }
 \value{
-invisibly return NULL
+Invisibly return \code{NULL}.
 }
 \description{
-Print Method for Class \code{summary.shapeNA}
+Print Method For Class \code{summary.shapeNA}
 }
 \examples{
     obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))
