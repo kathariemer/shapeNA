@@ -7,12 +7,13 @@
 \method{summary}{shapeNA}(object, ...)
 }
 \arguments{
-\item{object}{an object of class shapeNA, usually from a call to powerShape or similar functions}
+\item{object}{an object of class \code{shapeNA}, usually from a call to
+\code{\link{powerShape}} or similar functions.}
 
-\item{...}{further arguments}
+\item{...}{Further arguments, which will be ignored.}
 }
 \description{
-Summary Method For Class \code{shapeNA}
+Summary methods for objects from class \code{shapeNA}.
 }
 \examples{
     obj <- tylerShape(mvtnorm::rmvt(100, diag(3)))

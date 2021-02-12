@@ -1,26 +1,31 @@
-#' Compute M-Estimators of Shape for Data With Missing Values
+#' M-estimators of Shape from the Power Family when Data is Missing
 #'
-#' `powerShapeNA`, `tylerShapeNA` and `classicShapeNA` compute
-#' power M-estimators of shape for data with missing values. The underlying
-#' missingness mechanism should be MCAR. These functions also compute estimates
-#' of location if no `center` is supplied.
+#' Power M-estimators of shape and location were recently suggested in
+#' Frahm et al. (2020). They have a tuning parameter `alpha` taking values in
+#' \code{[0,1]}. The extreme case `alpha` = 1 corresponds to Tyler's shape matrix and
+#' `alpha` = 0 to the classical covariance matrix. The special cases have own,
+#' more efficient functions.
+#' If the true location is known, it should be supplied as `center`, otherwise
+#' it is estimated simultaneously with the shape.
 #'
-#' For multivariate normally distributed data, `classicShapeNA` is an
-#' ML-estimator. This is a special case of the power M-estimator with tail index
-#' `alpha` = 0 and returns the empirical covariance matrix and the empirical mean
-#' vector.
+#' These functions assume, that the data were generated from an generalized
+#' elliptical distribution and that the missingness mechanism is MCAR.
+# TODO MAR also okay?
 #'
-#' `tylerShapeNA` maximizes the likelihood function after projecting the observed
-#' data of each individual onto the unit hypersphere, in which case we obtain
-#' an angular central Gaussian distribution. This is a special case of the power
-#' M-estimator with tail index `alpha` = 1 and returns Tyler's M-estimator of
-#' scatter and an affine equivariant multivariate median.
-# TODO: Hettmansperger and randles
+#' For multivariate normally distributed data, `classicShapeNA` is the maximum
+#' likelihood estimator. This is a special case of the power M-estimator with
+#' tail index `alpha` = 0 and returns the empirical covariance matrix and the
+#' empirical mean vector.
 #'
-#' `powerShapeNA` requires an additional parameter, the so-called tail index `alpha`.
-#' For asymptotic normality, this index should be chosen taking into consideration
-#' the data. For heavy tailed data, the index should be closer to 1, for light
-#' tailed data the index should be chosen closer to 0.
+#' The function `tylerShapeNA` maximizes the likelihood function after projecting
+#' the observed data of each individual onto the unit hypersphere, in which case
+#' we obtain an angular central Gaussian distribution. This is a special case of
+#' the power M-estimator with tail index `alpha` = 1 and returns Tyler's
+#' M-estimator of scatter and an affine equivariant multivariate median.
+#'
+#' The function `powerShapeNA` requires an additional parameter, the so-called
+#' tail index `alpha`. For heavy tailed data, the index should be closer to 1,
+#' for light tailed data the index should be chosen closer to 0.
 #'
 #' @aliases powerShapeNA
 #' @aliases classicShapeNA
@@ -33,30 +38,34 @@
 #' @usage classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"),
 #'          maxiter = 1e4, eps = 1e-6)
 #'
-#' @param x A data matrix or data.frame with missing data and `p > 2` columns.
-#'   Representing sample from generalized elliptical distribution and MCAR missingness
-#' @param alpha Tail index, a numeric value from the interval `[0, 1]`. Determines
-#'   the power function. For more information see 'Details'.
-#' @param center An optional vector of the data's center, if NULL the center
-#'   will be estimated simultaneously to the shape estimate.
-#' @param normalization A string, determines scale of returned shape estimate.
-#'   The possible values are \itemize{
-#'     \item{'det'} s.t. the returned shape estimate has determinant 1.
-#'     \item{'trace'} s.t. the returned shape estimate has trace `p`.
-#'     \item{'one'} s.t. the returned shape estimate's first entry is 1.
+#' @param x A data matrix or data.frame with missing data and `p` > 2 columns.
+#' @param alpha Tail index, a numeric value from the interval \code{[0, 1]}.
+#'     Determines the power function. For more information see 'Details'.
+#' @param center An optional vector of the data's center, if `NULL` the center
+#'   will be estimated simultaneously with the shape estimate.
+#' @param normalization A string determining how the shape matrix is standardized.
+#' The possible values are
+#' \itemize{
+#'     \item{`'det'`}{such that the returned shape estimate has determinant 1.}
+#'     \item{`'trace'`}{such that the returned shape estimate has trace.}
+#'     \item{`'one'`}{such that the returned shape estimate's top left entry
+#'     (`S[1, 1]`) is 1.}
 #'   }
 #' @param maxiter A positive integer, restricting the maximum number of iterations.
 #' @param eps A numeric, specifying tolerance level of when the iteration stops.
 #'
 #' @return A list with class 'shapeNA' containing the following components:
 #' \describe{
-#'   \item{S}{the estimated shape matrix.}
-#'   \item{scale}{the scale with which the shape matrix may be scaled to obtain a scatter estimate. If `alpha` == 1, then this value is meaningless.}
-#'   \item{mu}{the location parameter, either provided by the user or estimated.}
-#'   \item{alpha}{the tail index with which the Power M-estimator has been called.}
-#'   \item{naBlocks}{an `naBlocks` object, with information about the missingness of the data.}
-#'   \item{iterations}{number of computed iterations before convergence.}
-#'   \item{call}{the matched call.}
+#'   \item{S}{The estimated shape matrix.}
+#'   \item{scale}{The scale with which the shape matrix may be scaled to obtain
+#'       a scatter estimate. If `alpha` == 1, then this value will be `NA`, as
+#'       Tyler's shape matrix has no natural scale.}
+#'   \item{mu}{The location parameter, either provided by the user or estimated.}
+#'   \item{alpha}{The tail index with which the Power M-estimator has been called.}
+#'   \item{naBlocks}{An `naBlocks` object, with information about the missingness
+#'       of the data.}
+#'   \item{iterations}{Number of computed iterations before convergence.}
+#'   \item{call}{The matched call.}
 #' }
 #'
 #' @export
@@ -70,7 +79,7 @@
 #' @examples
 #'     ## Generate a data set with missing values
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
-#'     y <- mice::ampute(x, mech='MCAR')$amp
+#'     y <- mice::ampute(x, mech = 'MCAR')$amp
 #'
 #'     ## Compute some M-estimators
 #'     res0 <- classicShapeNA(y, center = c(0, 0, 0))
@@ -89,7 +98,7 @@
 #'     summary(res0)
 #'     ## Inspect missingness pattern
 #'     plot(res0$naBlocks)
-#'     barplotMissProp(res0)
+#'     barplot(res0)
 powerShapeNA <- function(x, alpha, center = NULL, normalization = c("det", "trace", "one"), maxiter = 1e4, eps = 1e-6) {
   if (!any(is.na(x))) {
     stop("No missing values found. Use powerShape().")
@@ -119,6 +128,9 @@ powerShapeNA <- function(x, alpha, center = NULL, normalization = c("det", "trac
     }
     res$alpha <- alpha
     res$call <- fctCall
+    if (alpha == 1) {
+      res$scale <- NA
+    }
     return(res)
     }
   )

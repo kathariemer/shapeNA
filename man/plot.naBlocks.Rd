@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{plot.naBlocks}
 \alias{plot.naBlocks}
-\title{Function to visualize the missing patterns for objects of class \code{naBlocks}.}
+\title{Plot Missingness Pattern of Data}
 \usage{
 \method{plot}{naBlocks}(x, ...)
 }

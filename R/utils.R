@@ -1,30 +1,32 @@
-#' Reorder Data With Missing Values
+#' Reorder Data with Missing Values
 #'
-#' Reorder a data set with `NA` entries to form blocks of missing values. The resulting
-#' data will have increasing missingness along the rows and along the columns. The rows
-#' are ordered such that the first block consists of complete observations, and
-#' the following blocks are ordered from most frequent missingness pattern to least
-#' frequent missingness pattern.
+#' Reorder a data set with `NA` entries to form blocks of missing values. The
+#' resulting data will have increasing missingness along the rows and along the
+#' columns. The rows are ordered such that the first block consists of complete
+#' observations, and the following blocks are ordered from most frequent
+#' missingness pattern to least frequent missingness pattern.
+#'
+#' In case of ties, that is two patterns occur with the same frequency, the block
+#' whose pattern occurs first will be ordered in front of the other block.
+#'
 #' This method may fail if the missingness is too strong or if the number of
 #' observations is too low (the number of observations has to exceed the number
-#' of variables), as it has been designed as a preprocessing step for shape estimations.
+#' of variables), as it has been designed as a preprocessing step for shape
+#' estimations.
 #'
-#' @param data A matrix with `NA` values.
+#' @param x A matrix with missing values.
 #' @param cleanup A logical flag. If `TRUE`, observations with less than 2 responses
 #'    are discarded.
 #' @param plot A logical flag. If true, a plot of the missingness pattern is produced.
 #'
-#' @returnA list of class `naBlocks` with components: \describe{
-#'     \item{`x`} the reordered data matrix.
-#'     \item{`permutation`} the permutation of the columns which was applied to reorder
-#'         the columns according to the number of `NA`s.
-#'     \item{`rowPermutation`} the permutation of the rows which generates the blocks.
-#'     \item{`N`} a vector of all row indices. Each row number points to the beginning
-#'         of a new missingness pattern.
-#'     \item{`D`} a vector specifying the missingness pattern for each block.
-#'     \item{`P`} a vector specifying the number of observed variables per block.
-#'     \item{`kn`} a vector specifying the percentage of observed responses per variable.
-#' }
+#' @return A list of class `naBlocks` with components:
+#'     \item{x}{The reordered data matrix.}
+#'     \item{permutation}{The permutation of the columns which was applied to reorder the columns according to the number of `NA`s.}
+#'     \item{rowPermutation}{The permutation of the rows which generates the blocks.}
+#'     \item{N}{A vector of all row indices. Each row number points to the beginning of a new missingness pattern.}
+#'     \item{D}{A vector specifying the missingness pattern for each block.}
+#'     \item{P}{A vector specifying the number of observed variables per block.}
+#'     \item{kn}{A vector specifying the percentage of observed responses per variable.}
 naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
   ## remove observations without responses or only 1 response ##
   if (cleanup) {
@@ -52,6 +54,7 @@ naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
   hasValue <- !is.na(x) # R matrix
   respPerVar <- colSums(hasValue)
   xIdx <- order(respPerVar, decreasing = TRUE)
+  # columns reordered from most to least observations
   x <- x[, xIdx]
   hasValue <- hasValue[, xIdx]
 
@@ -66,6 +69,7 @@ naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
   D <- rowSums(hasValue[blockInfo$order[N],])
   P <- rle$values  # save pattern info
 
+  # rows reordered to form blocks
   x <- x[blockInfo$order, ]
 
   if (N[1] < D[1]) {
@@ -83,6 +87,8 @@ naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
 }
 
 
+#' Plot Missingness Pattern of Data
+#'
 #' Function to visualize the missing patterns for objects of class `naBlocks`.
 #'
 #' @param x A `naBlocks` object.
@@ -177,9 +183,10 @@ grayscale <- function(A) {
   return((A-m)/(m-M)+1)
 }
 
-#' Print Method for Elements of Class `shapeNA`
+#' Print Method for Objects of Class `shapeNA`
 #'
-#' Print alpha level, shape estimate and center.
+#' Prints the used value of `alpha` and the estimated shape and location for
+#' objects of class `shapeNA`.
 #'
 #' @param x A `shapeNA` object
 #' @param ... Additional parameters passed to lower level \code{\link[base]{print}}.
@@ -199,8 +206,9 @@ print.shapeNA <- function(x, ...) {
 
 #' Visualization of Shape Estimate
 #'
-#' Plot each matrix entry as a cell, with dark cells indicating high values and
-#' light values indicate small values.
+#' Function to visualize the shape matrix from objects of class `shapeNA` by
+#' plotting a heatmap where light colored cells indicate small values and dark
+#' colored cells indicate high values.
 #'
 #' @param x A `shapeNA` oopbject
 #' @param message A logical, If `TRUE`, the percentage of observed values per
@@ -212,7 +220,11 @@ print.shapeNA <- function(x, ...) {
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- tylerShapeNA(y)
+#'     ## default plot
 #'     plot(res)
+#'     ## plot result in gray scale - reverse order to get a palette starting
+#'     ## with the lightest instead of the darkest color
+#'     plot(res, col = gray.colors(9, rev = TRUE))
 plot.shapeNA <- function(x, message = TRUE, ...) {
   imageS <- x$S
   p <- ncol(imageS)
@@ -286,12 +298,33 @@ matroot <- function(Sigma) {
 # @param R reordered missingness matrix
 # @return permutation for reordering of data and runlength encoded integer pattern,
 #   i.e a missingness of (0,1,0,1) translates to 8*0 + 4*1 + 2*0 * 1*1 = 5
+
+#' Get Row Indices which Produce a Block Structure of Missingness
+#'
+#' Use a mapping of binary vectors to integers, that is
+#' \deqn{(x_1, x_2, \ldots, x_p) \mapsto \sum_{i=1}^p 2^{p-i}x_i}
+#' to handle the missingness for each record in a more compact way. Return a
+#' row order, such that the missingness forms blocks in the matrix `R` and also
+#' return a run length encoding of the integer vector, which shows for each
+#' pattern the number of consecutive rows, which have the same missingness
+#' structure.
+#'
+#' @param R A boolean matrix.
+#'
+#' @return A list with
+#'     \item{order}{A vector, which subsets the input matrix R in such a way,
+#'     that the boolean values form blocks.}
+#'     \item{rle}{An `rle` object, whose `values` give the blocks pattern as
+#'     integers and whose `lengths` give the size of each block.}
+#' @noRd
 getMissingnessBlocks <- function(R) {
   p2 <- 2^((ncol(R)-1):0)
+  # encode missingness as integer
   pattern <- rowSums(sweep(R, 2, p2, "*"))
+  # named vector with pattern named with corresponding integer and it's
+  # frequency as value
   lev <- summary(as.factor(pattern))
   patternF <- factor(pattern, levels = names(sort(lev, decreasing = TRUE)))
-  #rowOrder <- order(rowSums(R), pattern, decreasing = c(TRUE, FALSE))
   rowOrder <- order(patternF)
   return(list(order=rowOrder, rle = rle(pattern[rowOrder])))
 }
@@ -306,13 +339,15 @@ getMissingnessBlocks <- function(R) {
 #'  shows the number of rows per block and the rightmost column, titled with `#`
 #'  shows the number of observed variables in the block.
 #'
-#' @param x A `naBlocks` object
+#' @param x An `naBlocks` object.
 #' @param ... Additional parameters passed to \code{\link[base]{print}}.
 #'
 #' @export
 #' @examples
-#'     x <- mvtnorm::rmvnorm(200, mean = c(0, 0))
-#'     classicShape(x)
+#'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
+#'     y <- mice::ampute(x, mech='MCAR')$amp
+#'     res <- classicShapeNA(y)
+#'     print(res$naBlocks)
 print.naBlocks <- function(x, ...) {
   p <- length(x$permutation)
   pattern <- sapply(x$P, asBinaryVector, d=p, logical=FALSE)
@@ -328,10 +363,11 @@ print.naBlocks <- function(x, ...) {
 #'
 #' Visualize the proportion of missingness per variable in a barplot.
 #'
-#' @param obj A `shapeNA` object
+#' @param height A `shapeNA` object.
 #' @param sortNA A logical. If `FALSE` the original variable order is kept,
-#'     else the variables are ordered from least to most missingness
-#' @param ... Additional graphical arguments passed to \code{\link[graphics]{barplot}}
+#'     else the variables are ordered from least to most missingness.
+#' @param ... Additional graphical arguments passed to
+#'     \code{\link[graphics]{barplot}}.
 #'
 #' @seealso \code{\link[graphics]{barplot}}
 #'
@@ -342,11 +378,11 @@ print.naBlocks <- function(x, ...) {
 #'     y <- mice::ampute(x, mech='MCAR')$amp
 #'     res <- classicShapeNA(y)
 #'     barplot(res)
-barplot.shapeNA <- function(obj, sortNA = FALSE, ...) {
-  if (is.null(obj$naBlocks)) {
+barplot.shapeNA <- function(height, sortNA = FALSE, ...) {
+  if (is.null(height$naBlocks)) {
     stop('No missing values in the data.')
   }
-  blocks <- obj$naBlocks
+  blocks <- height$naBlocks
   mprop <- colSums(is.na(blocks$data))/nrow(blocks$data)
   if (!sortNA) {
     mprop <- mprop[order(blocks$permutation)]
@@ -357,8 +393,11 @@ barplot.shapeNA <- function(obj, sortNA = FALSE, ...) {
 
 #' Summary Method For Class `shapeNA`
 #'
-#' @param object an object of class shapeNA, usually from a call to powerShape or similar functions
-#' @param ... further arguments
+#' Summary methods for objects from class `shapeNA`.
+#'
+#' @param object an object of class `shapeNA`, usually from a call to
+#'     \code{\link{powerShape}} or similar functions.
+#' @param ... Further arguments, which will be ignored.
 #'
 #' @export
 #'
@@ -372,10 +411,10 @@ summary.shapeNA <- function(object, ...) {
 
 #' Print Method For Class `summary.shapeNA`
 #'
-#' @param x object returned from summary.shapeNA
-#' @param ... further arguments
+#' @param x object returned from \code{\link{summary.shapeNA}}.
+#' @param ... Further arguments, which will be ignored.
 #'
-#' @return invisibly return NULL
+#' @return Invisibly return `NULL`.
 #'
 #' @export
 #'
@@ -434,24 +473,28 @@ normalizationFunction <- function(normalization) {
   return(scatterNormFct)
 }
 
-#' Scatter Estimates from shapeNA object
+#' Scatter Estimates from `shapeNA` Objects
 #'
-#' For Power M-estimates with tail index `alpha` < 1, the resulting estimate
+#' For Power M-estimates with tail index `alpha < 1`, the resulting estimate
 #' has a scale. For these cases, a scatter estimate can be computed. Results from
 #' `tylerShape` and `tylerShapeNA` give no scatter estimates.
 #'
-#' @param obj shapeNA object, resulting from a call to `powerShape()` and other
+#' @param obj `shapeNA` object, resulting from a call to `powerShape()` and other
 #'  functions from the same family.
 #'
-#' @return scatter matrix estimate, or `NA` if `alpha` == 1
+#' @return Scatter matrix estimate, or only `NA` if `alpha == 1`.
 #' @export
 #'
 #' @examples
 #'     S <- toeplitz(c(1, 0.3, 0.7))
 #'     set.seed(123)
 #'     x <- mvtnorm::rmvt(100, S, df = 3)
-#'     obj <- powerShape(x, alpha = 0.85)
-#'     shape2scatter(obj)
+#'     obj_det <- powerShape(x, alpha = 0.85, normalization = 'det')
+#'     shape2scatter(obj_det)
+#'     obj_tr <- powerShape(x, alpha = 0.85, normalization = 'trace')
+#'     shape2scatter(obj_tr)
+#'     obj_one <- powerShape(x, alpha = 0.85, normalization = 'one')
+#'     shape2scatter(obj_one)
 shape2scatter <- function(obj) {
   if (obj$alpha == 1) {
     message("Covariance matrix for Tyler's M-estimate undefined")

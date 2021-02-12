@@ -7,12 +7,12 @@
 \method{print}{summary.shapeNA}(x, ...)
 }
 \arguments{
-\item{x}{object returned from summary.shapeNA}
+\item{x}{object returned from \code{\link{summary.shapeNA}}.}
 
-\item{...}{further arguments}
+\item{...}{Further arguments, which will be ignored.}
 }
 \value{
-invisibly return NULL
+Invisibly return \code{NULL}.
 }
 \description{
 Print Method For Class \code{summary.shapeNA}

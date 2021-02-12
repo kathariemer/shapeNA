@@ -2,25 +2,41 @@
 % Please edit documentation in R/utils.R
 \name{naBlocks}
 \alias{naBlocks}
-\title{Reorder Data With Missing Values}
+\title{Reorder Data with Missing Values}
 \usage{
 naBlocks(x, cleanup = TRUE, plot = FALSE)
 }
 \arguments{
+\item{x}{A matrix with missing values.}
+
 \item{cleanup}{A logical flag. If \code{TRUE}, observations with less than 2 responses
 are discarded.}
 
 \item{plot}{A logical flag. If true, a plot of the missingness pattern is produced.}
-
-\item{data}{A matrix with \code{NA} values.}
+}
+\value{
+A list of class \code{naBlocks} with components:
+\item{x}{The reordered data matrix.}
+\item{permutation}{The permutation of the columns which was applied to reorder the columns according to the number of \code{NA}s.}
+\item{rowPermutation}{The permutation of the rows which generates the blocks.}
+\item{N}{A vector of all row indices. Each row number points to the beginning of a new missingness pattern.}
+\item{D}{A vector specifying the missingness pattern for each block.}
+\item{P}{A vector specifying the number of observed variables per block.}
+\item{kn}{A vector specifying the percentage of observed responses per variable.}
 }
 \description{
-Reorder a data set with \code{NA} entries to form blocks of missing values. The resulting
-data will have increasing missingness along the rows and along the columns. The rows
-are ordered such that the first block consists of complete observations, and
-the following blocks are ordered from most frequent missingness pattern to least
-frequent missingness pattern.
+Reorder a data set with \code{NA} entries to form blocks of missing values. The
+resulting data will have increasing missingness along the rows and along the
+columns. The rows are ordered such that the first block consists of complete
+observations, and the following blocks are ordered from most frequent
+missingness pattern to least frequent missingness pattern.
+}
+\details{
+In case of ties, that is two patterns occur with the same frequency, the block
+whose pattern occurs first will be ordered in front of the other block.
+
 This method may fail if the missingness is too strong or if the number of
 observations is too low (the number of observations has to exceed the number
-of variables), as it has been designed as a preprocessing step for shape estimations.
+of variables), as it has been designed as a preprocessing step for shape
+estimations.
 }
