@@ -10,7 +10,7 @@
 \item{object}{an object of class \code{shapeNA}, usually from a call to
 \code{\link{powerShape}} or similar functions.}
 
-\item{...}{Further arguments, which will be ignored.}
+\item{...}{Further arguments to be passed to or from methods.}
 }
 \description{
 Summary methods for objects from class \code{shapeNA}.

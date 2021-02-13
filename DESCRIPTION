@@ -1,5 +1,5 @@
 Package: shapeNA
-Title: M-Estimation of Shape for Data With Missing Values
+Title: M-Estimation of Shape for Data with Missing Values
 Version: 0.0.0.9000
 Authors@R:
     c(person(given = "Katharina",
@@ -19,7 +19,7 @@ Authors@R:
              role = c("aut"),
              comment = c(ORCID = "0000-0003-0329-0595"))) 
 Description:  M-estimators of location and shape following the recently 
-    suggested power family (see Frahm, Nordhausen, Oja (2020) 
+    suggested power family (Frahm, Nordhausen, Oja (2020) 
     <doi:10.1016/j.jmva.2019.104569>) are provided in the case of complete data 
     and also when observations have missing values together with functions 
     aiding their visualization.
@@ -38,4 +38,3 @@ Suggests:
     rmarkdown,
     mvtnorm,
     mice
-VignetteBuilder: knitr

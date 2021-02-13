@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{object returned from \code{\link{summary.shapeNA}}.}
 
-\item{...}{Further arguments, which will be ignored.}
+\item{...}{Further arguments to be passed to or from methods.}
 }
 \value{
 Invisibly return \code{NULL}.

@@ -147,9 +147,20 @@ binaryToIndex <- function(x, d) {
   return(b)
 }
 
-# plot boolean matrix as a grid of colored rectangles
-# blue fields are TRUE, white fields are FALSE, yellow fields are NA
-# @param R boolean matrix
+#' Matrix Plot for Binary Matrices
+#'
+#' If the matrix contains missing values, instead of the matrix itself, a boolean
+#' matrix representing the missingness is plotted, with blue cells representing
+#' observed and yellow cells representing missing values.
+#' Otherwise, cells with entries 0 are colored white and all other cells are colored
+#' blue.
+#'
+#' @param R Matrix with missing values or with entries \code{{0, 1}}.
+#' @param blockNames An optional vector with length \code{nrow(R)}, which is
+#'     displayed to the left of the plot.
+#' @param ... Additional arguments passed on to \code{\link[graphics]{rect}}.
+#'
+#' @noRd
 plotAsBoolMat <- function(R, blockNames, ...) {
   # R <- obj$pattern
   color2 <- colors["white"]
@@ -161,7 +172,7 @@ plotAsBoolMat <- function(R, blockNames, ...) {
   }
   r <- nrow(R)
   c <- ncol(R)
-  plot(1, type='n', xlim=c(0,c+1), ylim = c(r+1,0), axes=FALSE, xlab=NA, ylab=NA)
+  graphics::plot(1, type='n', xlim=c(0,c+1), ylim = c(r+1,0), axes=FALSE, xlab=NA, ylab=NA)
   xleft <- rep(1, r)
   ybottom <- 0:(r-1)
   for (i in 1:c) {
@@ -369,6 +380,8 @@ print.naBlocks <- function(x, ...) {
 #' @param ... Additional graphical arguments passed to
 #'     \code{\link[graphics]{barplot}}.
 #'
+#' @importFrom graphics barplot
+#'
 #' @seealso \code{\link[graphics]{barplot}}
 #'
 #' @export
@@ -387,7 +400,7 @@ barplot.shapeNA <- function(height, sortNA = FALSE, ...) {
   if (!sortNA) {
     mprop <- mprop[order(blocks$permutation)]
   }
-  graphics::barplot(mprop, ..., main = 'Proportion of missing values')
+  barplot(mprop, ..., main = 'Proportion of missing values')
   invisible(mprop)
 }
 
@@ -397,7 +410,8 @@ barplot.shapeNA <- function(height, sortNA = FALSE, ...) {
 #'
 #' @param object an object of class `shapeNA`, usually from a call to
 #'     \code{\link{powerShape}} or similar functions.
-#' @param ... Further arguments, which will be ignored.
+#' @param ... Further arguments to be passed to or from methods.
+# @param ... Further arguments, which will be ignored.
 #'
 #' @export
 #'
@@ -412,7 +426,8 @@ summary.shapeNA <- function(object, ...) {
 #' Print Method For Class `summary.shapeNA`
 #'
 #' @param x object returned from \code{\link{summary.shapeNA}}.
-#' @param ... Further arguments, which will be ignored.
+#' @param ... Further arguments to be passed to or from methods.
+# @param ... Further arguments, which will be ignored.
 #'
 #' @return Invisibly return `NULL`.
 #'

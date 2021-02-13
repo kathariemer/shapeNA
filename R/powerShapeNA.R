@@ -9,7 +9,8 @@
 #' it is estimated simultaneously with the shape.
 #'
 #' These functions assume, that the data were generated from an generalized
-#' elliptical distribution and that the missingness mechanism is MCAR.
+#' elliptical distribution and that the missingness mechanism is MCAR or under
+#' stricter distributional assumptions MAR. See the references for details.
 # TODO MAR also okay?
 #'
 #' For multivariate normally distributed data, `classicShapeNA` is the maximum
@@ -70,8 +71,8 @@
 #'
 #' @export
 #'
-#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. <doi:10.1016/j.csda.2009.08.019>.
-#' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. <doi:10.1016/j.jmva.2019.104569>.
+#' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. \doi{10.1016/j.csda.2009.08.019}.
+#' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \doi{10.1016/j.jmva.2019.104569}.
 #'
 #' @seealso [powerShape], [tylerShape] and [classicShape] for the
 #'     corresponding functions for data without missing values.

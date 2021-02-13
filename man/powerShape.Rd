@@ -96,9 +96,9 @@ for light tailed data the index should be chosen closer to 0.
     summary(res0)
 }
 \references{
-Tyler, D.E. (1987). A Distribution-Free M-Estimator of Multivariate Scatter. The Annals of Statistics, 15, 234.251. \url{doi:10.1214/aos/1176350263}.
+Tyler, D.E. (1987). A Distribution-Free M-Estimator of Multivariate Scatter. The Annals of Statistics, 15, 234.251. \doi{10.1214/aos/1176350263}.
 
-Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \url{doi:10.1016/j.jmva.2019.104569}.
+Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \doi{10.1016/j.jmva.2019.104569}.
 }
 \seealso{
 \link{powerShapeNA}, \link{tylerShapeNA} and \link{classicShapeNA} for the
