@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{ellipse}
 \alias{ellipse}
-\title{Ellipse For Covariance Matrix}
+\title{Ellipse for Covariance Matrix}
 \usage{
 ellipse(mu, S, idx, n = 250)
 }

@@ -6,7 +6,7 @@
 #' observations, and the following blocks are ordered from most frequent
 #' missingness pattern to least frequent missingness pattern.
 #'
-#' In case of ties, that is two patterns occur with the same frequency, the block
+#' In case of ties, that is if two patterns occur with the same frequency, the block
 #' whose pattern occurs first will be ordered in front of the other block.
 #'
 #' This method may fail if the missingness is too strong or if the number of
@@ -342,13 +342,13 @@ getMissingnessBlocks <- function(R) {
 
 #' Print Missingness Pattern
 #'
-#' Print the pattern of missingness in the supplied data, as a matrix for 1s,
-#' representing a column vector of responses and 0s, representing a column vector
-#' of `NA`s.
+#' Print the pattern of missingness in the supplied data, as a block matrix.
+#' Observed data is represented by 1, missing values by 0.
+#for 1s, representing a column vector of responses and 0s, representing a column vectorof `NA`s.
 #'
-#' The first row shows the column names. The leftmost column, without column names,
-#'  shows the number of rows per block and the rightmost column, titled with `#`
-#'  shows the number of observed variables in the block.
+#' The first row shows the column names. The leftmost column, without column
+#' name, shows the number of rows per block and the rightmost column with name
+#' `#` shows the number of observed variables in the block.
 #'
 #' @param x An `naBlocks` object.
 #' @param ... Additional parameters passed to \code{\link[base]{print}}.
@@ -404,7 +404,7 @@ barplot.shapeNA <- function(height, sortNA = FALSE, ...) {
   invisible(mprop)
 }
 
-#' Summary Method For Class `shapeNA`
+#' Summary Method for Class `shapeNA`
 #'
 #' Summary methods for objects from class `shapeNA`.
 #'
@@ -423,7 +423,7 @@ summary.shapeNA <- function(object, ...) {
   return(object)
 }
 
-#' Print Method For Class `summary.shapeNA`
+#' Print Method for Class `summary.shapeNA`
 #'
 #' @param x object returned from \code{\link{summary.shapeNA}}.
 #' @param ... Further arguments to be passed to or from methods.
@@ -492,12 +492,13 @@ normalizationFunction <- function(normalization) {
 #'
 #' For Power M-estimates with tail index `alpha < 1`, the resulting estimate
 #' has a scale. For these cases, a scatter estimate can be computed. Results from
-#' `tylerShape` and `tylerShapeNA` give no scatter estimates.
+#' \code{\link{tylerShape}} and \code{\link{tylerShapeNA}} give no scatter
+#' estimates. In these cases the function returns `NA`.
 #'
-#' @param obj `shapeNA` object, resulting from a call to `powerShape()` and other
-#'  functions from the same family.
+#' @param obj `shapeNA` object, resulting from a call to
+#'  \code{\link{powerShape()}} and other functions from the same family.
 #'
-#' @return Scatter matrix estimate, or only `NA` if `alpha == 1`.
+#' @return Scatter matrix estimate, or only `NA` if `alpha` = 1.
 #' @export
 #'
 #' @examples
@@ -555,7 +556,7 @@ ellipseShape <- function(obj, idx=1:2, n = 250) {
   return(ellipse(obj$mu, S, idx, n))
 }
 
-#' Ellipse For Covariance Matrix
+#' Ellipse for Covariance Matrix
 #'
 #' Given a center and covariance, get (x,y)-coordinates of points, which have
 #' mahalanobis distance 1.

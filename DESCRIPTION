@@ -1,6 +1,6 @@
 Package: shapeNA
 Title: M-Estimation of Shape for Data with Missing Values
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R:
     c(person(given = "Katharina",
              family = "Riemer",

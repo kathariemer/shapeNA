@@ -4,7 +4,7 @@
 \alias{powerShapeNA}
 \alias{classicShapeNA}
 \alias{tylerShapeNA}
-\title{M-estimators of Shape from the Power Family when Data is Missing}
+\title{M-estimators of the Shape from the Power Family when Data is Missing}
 \usage{
 powerShapeNA(x, alpha, center = NULL, normalization = c("det", "trace", "one"),
          maxiter = 1e4, eps = 1e-6)
@@ -18,7 +18,7 @@ classicShapeNA(x, center = NULL, normalization = c("det", "trace", "one"),
 \arguments{
 \item{x}{A data matrix or data.frame with missing data and \code{p} > 2 columns.}
 
-\item{alpha}{Tail index, a numeric value from the interval \code{[0, 1]}.
+\item{alpha}{Tail index, a numeric value in the interval \code{[0, 1]}.
 Determines the power function. For more information see 'Details'.}
 
 \item{center}{An optional vector of the data's center, if \code{NULL} the center
@@ -28,7 +28,7 @@ will be estimated simultaneously with the shape estimate.}
 The possible values are
 \itemize{
 \item{\code{'det'}}{such that the returned shape estimate has determinant 1.}
-\item{\code{'trace'}}{such that the returned shape estimate has trace.}
+\item{\code{'trace'}}{such that the returned shape estimate has trace \code{ncol(x)}.}
 \item{\code{'one'}}{such that the returned shape estimate's top left entry
 (\code{S[1, 1]}) is 1.}
 }}
@@ -42,7 +42,7 @@ A list with class 'shapeNA' containing the following components:
 \describe{
 \item{S}{The estimated shape matrix.}
 \item{scale}{The scale with which the shape matrix may be scaled to obtain
-a scatter estimate. If \code{alpha} == 1, then this value will be \code{NA}, as
+a scatter estimate. If \code{alpha} = 1, then this value will be \code{NA}, as
 Tyler's shape matrix has no natural scale.}
 \item{mu}{The location parameter, either provided by the user or estimated.}
 \item{alpha}{The tail index with which the Power M-estimator has been called.}
@@ -55,26 +55,27 @@ of the data.}
 \description{
 Power M-estimators of shape and location were recently suggested in
 Frahm et al. (2020). They have a tuning parameter \code{alpha} taking values in
-\code{[0,1]}. The extreme case \code{alpha} = 1 corresponds to Tyler's shape matrix and
-\code{alpha} = 0 to the classical covariance matrix. The special cases have own,
-more efficient functions.
+\code{[0,1]}. The extreme case \code{alpha} = 1 corresponds to Tyler's shape
+matrix and \code{alpha} = 0 to the classical covariance matrix. These special
+cases have their own, more efficient functions \code{\link{tylerShapeNA}} and
+\code{\link{classicShapeNA}} respectively.
 If the true location is known, it should be supplied as \code{center}, otherwise
 it is estimated simultaneously with the shape.
 }
 \details{
-These functions assume, that the data were generated from an generalized
+These functions assume that the data were generated from a generalized
 elliptical distribution and that the missingness mechanism is MCAR or under
 stricter distributional assumptions MAR. See the references for details.
 
 For multivariate normally distributed data, \code{classicShapeNA} is the maximum
-likelihood estimator. This is a special case of the power M-estimator with
-tail index \code{alpha} = 0 and returns the empirical covariance matrix and the
-empirical mean vector.
+likelihood estimator of the location and scale. It is a special case of the
+power M-estimator with tail index \code{alpha} = 0, which returns the
+empirical covariance matrix and the empirical mean vector.
 
 The function \code{tylerShapeNA} maximizes the likelihood function after projecting
 the observed data of each individual onto the unit hypersphere, in which case
-we obtain an angular central Gaussian distribution. This is a special case of
-the power M-estimator with tail index \code{alpha} = 1 and returns Tyler's
+we obtain an angular central Gaussian distribution. It is a special case of
+the power M-estimator with tail index \code{alpha} = 1, which returns Tyler's
 M-estimator of scatter and an affine equivariant multivariate median.
 
 The function \code{powerShapeNA} requires an additional parameter, the so-called

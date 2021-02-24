@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{summary.shapeNA}
 \alias{summary.shapeNA}
-\title{Summary Method For Class \code{shapeNA}}
+\title{Summary Method for Class \code{shapeNA}}
 \usage{
 \method{summary}{shapeNA}(object, ...)
 }

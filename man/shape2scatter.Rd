@@ -7,16 +7,17 @@
 shape2scatter(obj)
 }
 \arguments{
-\item{obj}{\code{shapeNA} object, resulting from a call to \code{powerShape()} and other
-functions from the same family.}
+\item{obj}{\code{shapeNA} object, resulting from a call to
+\code{\link{powerShape()}} and other functions from the same family.}
 }
 \value{
-Scatter matrix estimate, or only \code{NA} if \code{alpha == 1}.
+Scatter matrix estimate, or only \code{NA} if \code{alpha} = 1.
 }
 \description{
 For Power M-estimates with tail index \code{alpha < 1}, the resulting estimate
 has a scale. For these cases, a scatter estimate can be computed. Results from
-\code{tylerShape} and \code{tylerShapeNA} give no scatter estimates.
+\code{\link{tylerShape}} and \code{\link{tylerShapeNA}} give no scatter
+estimates. In these cases the function returns \code{NA}.
 }
 \examples{
     S <- toeplitz(c(1, 0.3, 0.7))

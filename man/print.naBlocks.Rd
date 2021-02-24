@@ -12,14 +12,13 @@
 \item{...}{Additional parameters passed to \code{\link[base]{print}}.}
 }
 \description{
-Print the pattern of missingness in the supplied data, as a matrix for 1s,
-representing a column vector of responses and 0s, representing a column vector
-of \code{NA}s.
+Print the pattern of missingness in the supplied data, as a block matrix.
+Observed data is represented by 1, missing values by 0.
 }
 \details{
-The first row shows the column names. The leftmost column, without column names,
-shows the number of rows per block and the rightmost column, titled with \verb{#}
-shows the number of observed variables in the block.
+The first row shows the column names. The leftmost column, without column
+name, shows the number of rows per block and the rightmost column with name
+\verb{#} shows the number of observed variables in the block.
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)

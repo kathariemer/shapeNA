@@ -32,7 +32,7 @@ observations, and the following blocks are ordered from most frequent
 missingness pattern to least frequent missingness pattern.
 }
 \details{
-In case of ties, that is two patterns occur with the same frequency, the block
+In case of ties, that is if two patterns occur with the same frequency, the block
 whose pattern occurs first will be ordered in front of the other block.
 
 This method may fail if the missingness is too strong or if the number of

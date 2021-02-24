@@ -1,0 +1,76 @@
+---
+title: "M-estimation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{M-estimation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(shapeNA)
+library(mvtnorm)
+```
+
+## Power M-estimator
+
+```{r}
+set.seed(1)
+mu <- c(0, 0)
+S <- matrix(c(1, 0.5, 0.5, 2), ncol = 2)
+X <- rmvt(500, sigma = S, df = 8)
+```
+
+Here, we have data from a multivariate `t`-distribution with 5 degrees of freedom. We know, that
+
+$$\mu = (0, 0)\text{ and } \Sigma = \begin{pmatrix} 1 & 0.5 \\ 0.5 & 2\end{pmatrix}.$$
+
+When using the classic estimators, we get:
+
+```{r}
+muHat <- colMeans(X)
+SigmaHat <- cov(X)
+```
+
+We may also plot both the true parameters and the estimated parameters. There we can see, that the classical estimator clearly overestimates th esize of the covariance matrix.
+
+```{r}
+plot(X)
+lines(shapeNA:::ellipse(mu, S), col = 2, lwd = 2)
+points(t(mu), col = 2, pch = 3, lwd = 2)
+lines(shapeNA:::ellipse(muHat, SigmaHat), col = 3, lty = 3, lwd = 2)
+points(t(muHat), col = 3, pch = 4, lwd = 2)
+```
+
+The power M-estimators give, with increasing `alpha`, closer estimates. The parameter `alpha` is also considered to be a tail index, and should be chosen according to the heavyness of the data's tails.
+
+```{r}
+plot(X)
+for (i in 4:1) {
+  res <- powerShape(X, alpha = (i-1)/4)
+  lines(shapeNA:::ellipseShape(res), col = i+1, lwd = 2)
+  points(t(res$mu), col = i+1, pch = i+1)
+}
+legend(2.5, -2, paste('alpha', (3:0/4)), col = 2:5, lty = 1, lwd = 2)
+```
+
+In the special case of `alpha == 0`, we get the traditional covariance and location estimate:
+
+```{r}
+summary(res)
+```
+
+
+```{r}
+all.equal(res$mu, muHat)
+all.equal(shapeNA:::toCov(res), SigmaHat)
+```
+
+In the special case of `alpha == 1`, for Tyler's M-estimate, we only get shape estimates, instead of covariance estimates. That means, the scale of the resulting matrix is undefined. Per default, they are computed to have determinant 1, even though any normalization may be chosen.
