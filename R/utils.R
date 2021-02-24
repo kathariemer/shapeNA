@@ -491,12 +491,14 @@ normalizationFunction <- function(normalization) {
 #' Scatter Estimates from `shapeNA` Objects
 #'
 #' For Power M-estimates with tail index `alpha < 1`, the resulting estimate
-#' has a scale. For these cases, a scatter estimate can be computed. Results from
+#' has a scale. For these shape estimates, scatter matrices can be computed.
+# cases, a scatter estimate can be computed.
+#' Results from
 #' \code{\link{tylerShape}} and \code{\link{tylerShapeNA}} give no scatter
 #' estimates. In these cases the function returns `NA`.
 #'
 #' @param obj `shapeNA` object, resulting from a call to
-#'  \code{\link{powerShape()}} and other functions from the same family.
+#'  \code{\link{powerShape}} and other functions from the same family.
 #'
 #' @return Scatter matrix estimate, or only `NA` if `alpha` = 1.
 #' @export

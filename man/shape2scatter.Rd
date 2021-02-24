@@ -8,14 +8,15 @@ shape2scatter(obj)
 }
 \arguments{
 \item{obj}{\code{shapeNA} object, resulting from a call to
-\code{\link{powerShape()}} and other functions from the same family.}
+\code{\link{powerShape}} and other functions from the same family.}
 }
 \value{
 Scatter matrix estimate, or only \code{NA} if \code{alpha} = 1.
 }
 \description{
 For Power M-estimates with tail index \code{alpha < 1}, the resulting estimate
-has a scale. For these cases, a scatter estimate can be computed. Results from
+has a scale. For these shape estimates, scatter matrices can be computed.
+Results from
 \code{\link{tylerShape}} and \code{\link{tylerShapeNA}} give no scatter
 estimates. In these cases the function returns \code{NA}.
 }

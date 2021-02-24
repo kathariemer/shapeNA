@@ -31,8 +31,7 @@ RoxygenNote: 7.1.1
 Depends: R (>= 3.6)
 Imports:
     graphics,
-    stats,
-    qpdf
+    stats
 Suggests: 
     knitr,
     rmarkdown,
