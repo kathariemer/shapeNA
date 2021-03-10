@@ -7,7 +7,7 @@
 \method{summary}{shapeNA}(object, ...)
 }
 \arguments{
-\item{object}{an object of class \code{shapeNA}, usually from a call to
+\item{object}{An object of class \code{shapeNA}, usually from a call to
 \code{\link{powerShape}} or similar functions.}
 
 \item{...}{Further arguments to be passed to or from methods.}

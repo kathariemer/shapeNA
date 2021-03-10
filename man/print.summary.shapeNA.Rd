@@ -7,12 +7,12 @@
 \method{print}{summary.shapeNA}(x, ...)
 }
 \arguments{
-\item{x}{object returned from \code{\link{summary.shapeNA}}.}
+\item{x}{Object returned from \code{\link{summary.shapeNA}}.}
 
 \item{...}{Further arguments to be passed to or from methods.}
 }
 \value{
-Invisibly return \code{NULL}.
+Invisibly returns \code{NULL}.
 }
 \description{
 Print Method for Class \code{summary.shapeNA}

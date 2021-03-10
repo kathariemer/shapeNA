@@ -12,13 +12,13 @@ naBlocks(x, cleanup = TRUE, plot = FALSE)
 \item{cleanup}{A logical flag. If \code{TRUE}, observations with less than 2 responses
 are discarded.}
 
-\item{plot}{A logical flag. If true, a plot of the missingness pattern is produced.}
+\item{plot}{A logical flag. If \code{TRUE}, a plot of the missingness pattern is produced.}
 }
 \value{
 A list of class \code{naBlocks} with components:
 \item{x}{The reordered data matrix.}
 \item{permutation}{The permutation of the columns which was applied to reorder the columns according to the number of \code{NA}s.}
-\item{rowPermutation}{The permutation of the rows which generates the blocks.}
+\item{rowPermutation}{The permutation of the rows generating the blocks.}
 \item{N}{A vector of all row indices. Each row number points to the beginning of a new missingness pattern.}
 \item{D}{A vector specifying the missingness pattern for each block.}
 \item{P}{A vector specifying the number of observed variables per block.}

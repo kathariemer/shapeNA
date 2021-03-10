@@ -5,13 +5,15 @@
 #' \code{[0,1]}. The extreme case `alpha` = 1 corresponds to Tyler's shape
 #' matrix and `alpha` = 0 to the classical covariance matrix. These special
 #' cases have their own, more efficient functions \code{\link{tylerShapeNA}} and
-#' \code{\link{classicShapeNA}} respectively.
+#' \code{\link{classicShapeNA}}, respectively.
 #' If the true location is known, it should be supplied as `center`, otherwise
 #' it is estimated simultaneously with the shape.
 #'
-#' These functions assume that the data were generated from a generalized
-#' elliptical distribution and that the missingness mechanism is MCAR or under
-#' stricter distributional assumptions MAR. See the references for details.
+#' These functions assume that the data were generated from an
+#' elliptical distribution, for Tyler's estimate this can be relaxed to
+#' generalized elliptical distributions
+#' The missingness mechanism should be MCAR or, under
+#' stricter distributional assumptions, MAR. See the references for details.
 # TODO MAR also okay?
 #'
 #' For multivariate normally distributed data, `classicShapeNA` is the maximum
@@ -44,7 +46,7 @@
 #' @param alpha Tail index, a numeric value in the interval \code{[0, 1]}.
 #'     Determines the power function. For more information see 'Details'.
 #' @param center An optional vector of the data's center, if `NULL` the center
-#'   will be estimated simultaneously with the shape estimate.
+#'   will be estimated simultaneously with the shape.
 #' @param normalization A string determining how the shape matrix is standardized.
 #' The possible values are
 #' \itemize{

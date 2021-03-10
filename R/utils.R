@@ -17,12 +17,12 @@
 #' @param x A matrix with missing values.
 #' @param cleanup A logical flag. If `TRUE`, observations with less than 2 responses
 #'    are discarded.
-#' @param plot A logical flag. If true, a plot of the missingness pattern is produced.
+#' @param plot A logical flag. If `TRUE`, a plot of the missingness pattern is produced.
 #'
 #' @return A list of class `naBlocks` with components:
 #'     \item{x}{The reordered data matrix.}
 #'     \item{permutation}{The permutation of the columns which was applied to reorder the columns according to the number of `NA`s.}
-#'     \item{rowPermutation}{The permutation of the rows which generates the blocks.}
+#'     \item{rowPermutation}{The permutation of the rows generating the blocks.}
 #'     \item{N}{A vector of all row indices. Each row number points to the beginning of a new missingness pattern.}
 #'     \item{D}{A vector specifying the missingness pattern for each block.}
 #'     \item{P}{A vector specifying the number of observed variables per block.}
@@ -89,7 +89,7 @@ naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
 
 #' Plot Missingness Pattern of Data
 #'
-#' Function to visualize the missing patterns for objects of class `naBlocks`.
+#' Function to visualize the patterns for objects of class `naBlocks`.
 #'
 #' @param x A `naBlocks` object.
 #' @param ... Additional parameters passed on to \code{\link[graphics]{rect}}.
@@ -343,8 +343,8 @@ getMissingnessBlocks <- function(R) {
 #' Print Missingness Pattern
 #'
 #' Print the pattern of missingness in the supplied data, as a block matrix.
-#' Observed data is represented by 1, missing values by 0.
-#for 1s, representing a column vector of responses and 0s, representing a column vectorof `NA`s.
+#' Observed data represented by 1, missing values by 0.
+#for 1s, representing a column vector of responses and 0s, representing a column vector of `NA`s.
 #'
 #' The first row shows the column names. The leftmost column, without column
 #' name, shows the number of rows per block and the rightmost column with name
@@ -408,7 +408,7 @@ barplot.shapeNA <- function(height, sortNA = FALSE, ...) {
 #'
 #' Summary methods for objects from class `shapeNA`.
 #'
-#' @param object an object of class `shapeNA`, usually from a call to
+#' @param object An object of class `shapeNA`, usually from a call to
 #'     \code{\link{powerShape}} or similar functions.
 #' @param ... Further arguments to be passed to or from methods.
 # @param ... Further arguments, which will be ignored.
@@ -425,11 +425,11 @@ summary.shapeNA <- function(object, ...) {
 
 #' Print Method for Class `summary.shapeNA`
 #'
-#' @param x object returned from \code{\link{summary.shapeNA}}.
+#' @param x Object returned from \code{\link{summary.shapeNA}}.
 #' @param ... Further arguments to be passed to or from methods.
 # @param ... Further arguments, which will be ignored.
 #'
-#' @return Invisibly return `NULL`.
+#' @return Invisibly returns `NULL`.
 #'
 #' @export
 #'

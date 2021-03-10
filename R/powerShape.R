@@ -5,12 +5,13 @@
 #' \code{[0,1]}. The extreme case `alpha` = 1 corresponds to Tyler's shape
 #' matrix and `alpha` = 0 to the classical covariance matrix. These special
 #' cases have their own, more efficient functions \code{\link{tylerShape}} and
-#' \code{\link{classicShape}} respectively.
+#' \code{\link{classicShape}}, respectively.
 #' If the true location is known, it should be supplied as `center`, otherwise
 #' it is estimated simultaneously with the shape.
 #'
-#' These functions assume that the data were generated from a generalized
-#' elliptical distribution.
+#' These functions assume that the data were generated from an
+#' elliptical distribution, for Tyler's estimate this can be relaxed to
+#' generalized elliptical distributions.
 #'
 #' For multivariate normally distributed data, `classicShape` is the maximum
 #' likelihood estimator of location and scale. It is a special case of the
@@ -43,7 +44,7 @@
 #' @param alpha Tail index, a numeric value in the interval \code{[0, 1]}.
 #'    Determines the power function. For more information see 'Details'.
 #' @param center An optional vector of the data's center, if `NULL` the center
-#'   will be estimated simultaneously with the shape estimate.
+#'   will be estimated simultaneously with the shape.
 #' @param normalization A string determining how the shape matrix is standardized.
 #' The possible values are
 #' \itemize{
