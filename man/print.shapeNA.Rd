@@ -12,8 +12,8 @@
 \item{...}{Additional parameters passed to lower level \code{\link[base]{print}}.}
 }
 \description{
-Prints the used value of \code{alpha} and the estimated shape and location for
-objects of class \code{shapeNA}.
+Prints the chosen value of \code{alpha} as well as the estimated shape and
+location for objects of class \code{shapeNA}.
 }
 \examples{
     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)

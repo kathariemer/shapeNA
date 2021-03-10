@@ -13,7 +13,7 @@
 }
 \description{
 Print the pattern of missingness in the supplied data, as a block matrix.
-Observed data represented by 1, missing values by 0.
+Observed data are represented by 1, missing values by 0.
 }
 \details{
 The first row shows the column names. The leftmost column, without column

@@ -21,8 +21,8 @@
 #'
 #' @return A list of class `naBlocks` with components:
 #'     \item{x}{The reordered data matrix.}
-#'     \item{permutation}{The permutation of the columns which was applied to reorder the columns according to the number of `NA`s.}
-#'     \item{rowPermutation}{The permutation of the rows generating the blocks.}
+#'     \item{permutation}{The permutation of the columns that was applied to reorder the columns according to the number of `NA`s.}
+#'     \item{rowPermutation}{The permutation of the rows that generates the blocks.}
 #'     \item{N}{A vector of all row indices. Each row number points to the beginning of a new missingness pattern.}
 #'     \item{D}{A vector specifying the missingness pattern for each block.}
 #'     \item{P}{A vector specifying the number of observed variables per block.}
@@ -89,7 +89,7 @@ naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
 
 #' Plot Missingness Pattern of Data
 #'
-#' Function to visualize the patterns for objects of class `naBlocks`.
+#' Function to visualize the missingness patterns for objects of class `naBlocks`.
 #'
 #' @param x A `naBlocks` object.
 #' @param ... Additional parameters passed on to \code{\link[graphics]{rect}}.
@@ -196,8 +196,8 @@ grayscale <- function(A) {
 
 #' Print Method for Objects of Class `shapeNA`
 #'
-#' Prints the used value of `alpha` and the estimated shape and location for
-#' objects of class `shapeNA`.
+#' Prints the chosen value of `alpha` as well as the estimated shape and
+#' location for objects of class `shapeNA`.
 #'
 #' @param x A `shapeNA` object
 #' @param ... Additional parameters passed to lower level \code{\link[base]{print}}.
@@ -343,7 +343,7 @@ getMissingnessBlocks <- function(R) {
 #' Print Missingness Pattern
 #'
 #' Print the pattern of missingness in the supplied data, as a block matrix.
-#' Observed data represented by 1, missing values by 0.
+#' Observed data are represented by 1, missing values by 0.
 #for 1s, representing a column vector of responses and 0s, representing a column vector of `NA`s.
 #'
 #' The first row shows the column names. The leftmost column, without column
@@ -375,8 +375,8 @@ print.naBlocks <- function(x, ...) {
 #' Visualize the proportion of missingness per variable in a barplot.
 #'
 #' @param height A `shapeNA` object.
-#' @param sortNA A logical. If `FALSE` the original variable order is kept,
-#'     else the variables are ordered from least to most missingness.
+#' @param sortNA A logical. If `FALSE`, the original variable order is kept.
+#'     Otherwise the variables are ordered from least to most missingness.
 #' @param ... Additional graphical arguments passed to
 #'     \code{\link[graphics]{barplot}}.
 #'

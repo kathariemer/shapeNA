@@ -16,20 +16,21 @@
 #' stricter distributional assumptions, MAR. See the references for details.
 # TODO MAR also okay?
 #'
-#' For multivariate normally distributed data, `classicShapeNA` is the maximum
+#' For multivariate normally distributed data, \code{\link{classicShapeNA}} is the maximum
 #' likelihood estimator of the location and scale. It is a special case of the
 #' power M-estimator with tail index `alpha` = 0, which returns the
 #' empirical covariance matrix and the empirical mean vector.
 #'
-#' The function `tylerShapeNA` maximizes the likelihood function after projecting
+#' The function \code{\link{tylerShapeNA}} maximizes the likelihood function after projecting
 #' the observed data of each individual onto the unit hypersphere, in which case
 #' we obtain an angular central Gaussian distribution. It is a special case of
 #' the power M-estimator with tail index `alpha` = 1, which returns Tyler's
-#' M-estimator of scatter and an affine equivariant multivariate median.
+#' M-estimator of scatter and an affine equivariant multivariate median
+#' according to Hettmansperger and Randles (2002).
 #'
-#' The function `powerShapeNA` requires an additional parameter, the so-called
-#' tail index `alpha`. For heavy tailed data, the index should be closer to 1,
-#' for light tailed data the index should be chosen closer to 0.
+#' The function \code{\link{powerShapeNA}} requires an additional parameter, the so-called
+#' tail index `alpha`. For heavy tailed data, the index should be chosen closer
+#' to 1, whereas for light tailed data the index should be chosen closer to 0.
 #'
 #' @aliases powerShapeNA
 #' @aliases classicShapeNA
@@ -76,6 +77,7 @@
 #'
 #' @references Frahm, G., & Jaekel, U. (2010). A generalization of Tyler's M-estimators to the case of incomplete data. Computational Statistics & Data Analysis, 54, 374-393. \doi{10.1016/j.csda.2009.08.019}.
 #' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \doi{10.1016/j.jmva.2019.104569}.
+#' @references Hettmansperger, T. P., & Randles, R. H. (2002). A practical affine equivariant multivariate median. Biometrika, 89(4), 851-860. \doi{10.1093/biomet/89.4.851}
 #'
 #' @seealso [powerShape], [tylerShape] and [classicShape] for the
 #'     corresponding functions for data without missing values.

@@ -9,8 +9,8 @@
 \arguments{
 \item{height}{A \code{shapeNA} object.}
 
-\item{sortNA}{A logical. If \code{FALSE} the original variable order is kept,
-else the variables are ordered from least to most missingness.}
+\item{sortNA}{A logical. If \code{FALSE}, the original variable order is kept.
+Otherwise the variables are ordered from least to most missingness.}
 
 \item{...}{Additional graphical arguments passed to
 \code{\link[graphics]{barplot}}.}

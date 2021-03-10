@@ -13,21 +13,22 @@
 #' elliptical distribution, for Tyler's estimate this can be relaxed to
 #' generalized elliptical distributions.
 #'
-#' For multivariate normally distributed data, `classicShape` is the maximum
+#' For multivariate normally distributed data, \code{\link{classicShape}} is the maximum
 #' likelihood estimator of location and scale. It is a special case of the
 #' power M-estimator with tail index `alpha` = 0, which returns the empirical
 #' covariance matrix and the empirical mean vector.
 #'
-#' The function `tylerShape` maximizes the likelihood function after projecting
+#' The function \code{\link{tylerShape}} maximizes the likelihood function after projecting
 #' the observed data of each individual onto the unit hypersphere, in which case
 #' we obtain an angular central Gaussian distribution. It is a special case of
 #' the power M-estimator with tail index `alpha` = 1, which returns Tyler's
-#' M-estimator of scatter and an affine equivariant multivariate median.
+#' M-estimator of scatter and an affine equivariant multivariate median
+#' according to Hettmansperger and Randles (2002).
 # TODO: Hettmansperger and randles
 #'
-#' The function `powerShape` requires an additional parameter, the so-called
-#' tail index `alpha`. For heavy tailed data, the index should be closer to 1,
-#' for light tailed data the index should be chosen closer to 0.
+#' The function \code{\link{powerShape}} requires an additional parameter, the so-called
+#' tail index `alpha`. For heavy tailed data, the index should be chosen closer
+#' to 1, whereas for light tailed data the index should be chosen closer to 0.
 #'
 #' @aliases powerShape
 #' @aliases tylerShape
@@ -43,7 +44,7 @@
 #' @param x A numeric data matrix or data.frame without missing data.
 #' @param alpha Tail index, a numeric value in the interval \code{[0, 1]}.
 #'    Determines the power function. For more information see 'Details'.
-#' @param center An optional vector of the data's center, if `NULL` the center
+#' @param center An optional vector of the data's center. If `NULL` the center
 #'   will be estimated simultaneously with the shape.
 #' @param normalization A string determining how the shape matrix is standardized.
 #' The possible values are
@@ -63,7 +64,7 @@
 #'   shape matrix has no natural scale.}
 #'   \item{mu}{The location parameter, either provided by the user or estimated.}
 #'   \item{alpha}{The tail index with which the Power M-estimator has been called.}
-#'   \item{naBlocks}{`NULL`, since `powerShape` operates only on complete data.}
+#'   \item{naBlocks}{`NULL`, since \code{\link{powerShape}} operates only on complete data.}
 #'   \item{iterations}{Number of computed iterations before convergence.}
 #'   \item{call}{The matched call.}
 #'
@@ -71,6 +72,7 @@
 #'
 #' @references Tyler, D.E. (1987). A Distribution-Free M-Estimator of Multivariate Scatter. The Annals of Statistics, 15, 234.251. \doi{10.1214/aos/1176350263}.
 #' @references Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \doi{10.1016/j.jmva.2019.104569}.
+#' @references Hettmansperger, T. P., & Randles, R. H. (2002). A practical affine equivariant multivariate median. Biometrika, 89(4), 851-860. \doi{10.1093/biomet/89.4.851}
 #'
 #' @seealso [powerShapeNA], [tylerShapeNA] and [classicShapeNA] for the
 #'     corresponding functions for data with missing values.

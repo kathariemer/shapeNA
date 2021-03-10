@@ -17,8 +17,8 @@ are discarded.}
 \value{
 A list of class \code{naBlocks} with components:
 \item{x}{The reordered data matrix.}
-\item{permutation}{The permutation of the columns which was applied to reorder the columns according to the number of \code{NA}s.}
-\item{rowPermutation}{The permutation of the rows generating the blocks.}
+\item{permutation}{The permutation of the columns that was applied to reorder the columns according to the number of \code{NA}s.}
+\item{rowPermutation}{The permutation of the rows that generates the blocks.}
 \item{N}{A vector of all row indices. Each row number points to the beginning of a new missingness pattern.}
 \item{D}{A vector specifying the missingness pattern for each block.}
 \item{P}{A vector specifying the number of observed variables per block.}

@@ -21,7 +21,7 @@ classicShape(x, center = NULL,
 \item{alpha}{Tail index, a numeric value in the interval \code{[0, 1]}.
 Determines the power function. For more information see 'Details'.}
 
-\item{center}{An optional vector of the data's center, if \code{NULL} the center
+\item{center}{An optional vector of the data's center. If \code{NULL} the center
 will be estimated simultaneously with the shape.}
 
 \item{normalization}{A string determining how the shape matrix is standardized.
@@ -45,7 +45,7 @@ a scatter estimate. If \code{alpha} = 1, then this value is \code{NA}, as Tyler'
 shape matrix has no natural scale.}
 \item{mu}{The location parameter, either provided by the user or estimated.}
 \item{alpha}{The tail index with which the Power M-estimator has been called.}
-\item{naBlocks}{\code{NULL}, since \code{powerShape} operates only on complete data.}
+\item{naBlocks}{\code{NULL}, since \code{\link{powerShape}} operates only on complete data.}
 \item{iterations}{Number of computed iterations before convergence.}
 \item{call}{The matched call.}
 }
@@ -64,20 +64,21 @@ These functions assume that the data were generated from an
 elliptical distribution, for Tyler's estimate this can be relaxed to
 generalized elliptical distributions.
 
-For multivariate normally distributed data, \code{classicShape} is the maximum
+For multivariate normally distributed data, \code{\link{classicShape}} is the maximum
 likelihood estimator of location and scale. It is a special case of the
 power M-estimator with tail index \code{alpha} = 0, which returns the empirical
 covariance matrix and the empirical mean vector.
 
-The function \code{tylerShape} maximizes the likelihood function after projecting
+The function \code{\link{tylerShape}} maximizes the likelihood function after projecting
 the observed data of each individual onto the unit hypersphere, in which case
 we obtain an angular central Gaussian distribution. It is a special case of
 the power M-estimator with tail index \code{alpha} = 1, which returns Tyler's
-M-estimator of scatter and an affine equivariant multivariate median.
+M-estimator of scatter and an affine equivariant multivariate median
+according to Hettmansperger and Randles (2002).
 
-The function \code{powerShape} requires an additional parameter, the so-called
-tail index \code{alpha}. For heavy tailed data, the index should be closer to 1,
-for light tailed data the index should be chosen closer to 0.
+The function \code{\link{powerShape}} requires an additional parameter, the so-called
+tail index \code{alpha}. For heavy tailed data, the index should be chosen closer
+to 1, whereas for light tailed data the index should be chosen closer to 0.
 }
 \examples{
     ## Generate example data
@@ -101,6 +102,8 @@ for light tailed data the index should be chosen closer to 0.
 Tyler, D.E. (1987). A Distribution-Free M-Estimator of Multivariate Scatter. The Annals of Statistics, 15, 234.251. \doi{10.1214/aos/1176350263}.
 
 Frahm, G., Nordhausen, K., & Oja, H. (2020). M-estimation with incomplete and dependent multivariate data. Journal of Multivariate Analysis, 176, 104569. \doi{10.1016/j.jmva.2019.104569}.
+
+Hettmansperger, T. P., & Randles, R. H. (2002). A practical affine equivariant multivariate median. Biometrika, 89(4), 851-860. \doi{10.1093/biomet/89.4.851}
 }
 \seealso{
 \link{powerShapeNA}, \link{tylerShapeNA} and \link{classicShapeNA} for the
