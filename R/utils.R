@@ -94,6 +94,8 @@ naBlocks <- function(x, cleanup=TRUE, plot=FALSE) {
 #' @param x A `naBlocks` object.
 #' @param ... Additional parameters passed on to \code{\link[graphics]{rect}}.
 #'
+#' @return No return value.
+#'
 #' @export
 #' @examples
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
@@ -105,7 +107,6 @@ plot.naBlocks <- function(x, ...) {
   bprop <- (idx - c(0, idx[-length(idx)]))/nrow(x$data)
   bIdx <- 1:length(idx)
   plotAsBoolMat(x$data[idx,], round(bprop,3), ...)
-  invisible(bprop)
 }
 
 # given a number n, return its binary representation as a vector
@@ -202,6 +203,8 @@ grayscale <- function(A) {
 #' @param x A `shapeNA` object
 #' @param ... Additional parameters passed to lower level \code{\link[base]{print}}.
 #'
+#' @return No return value.
+#'
 #' @export
 #' @examples
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
@@ -213,6 +216,7 @@ print.shapeNA <- function(x, ...) {
   } else {
     print(list(alpha=x$alpha, S=x$S, mu=x$mu), ...)
   }
+  invisible(NULL)
 }
 
 #' Visualization of Shape Estimate
@@ -225,6 +229,8 @@ print.shapeNA <- function(x, ...) {
 #' @param message A logical, If `TRUE`, the percentage of observed values per
 #'     variable is printed in the console.
 #' @param ... Additional parameters passed to \code{\link[graphics]{image}}.
+#'
+#' @return A matrix with the proportion of observed values for each variable.
 #'
 #' @export
 #' @examples
@@ -353,6 +359,8 @@ getMissingnessBlocks <- function(R) {
 #' @param x An `naBlocks` object.
 #' @param ... Additional parameters passed to \code{\link[base]{print}}.
 #'
+#' @return A named matrix representing the missingness pattern of the data.
+#'
 #' @export
 #' @examples
 #'     x <- mvtnorm::rmvt(100, toeplitz(seq(1, 0.1, length.out = 3)), df = 5)
@@ -379,6 +387,9 @@ print.naBlocks <- function(x, ...) {
 #'     Otherwise the variables are ordered from least to most missingness.
 #' @param ... Additional graphical arguments passed to
 #'     \code{\link[graphics]{barplot}}.
+#'
+#' @return Invisibly returns a named vector holding the proportion of
+#' missingness per variable.
 #'
 #' @importFrom graphics barplot
 #'
@@ -411,7 +422,10 @@ barplot.shapeNA <- function(height, sortNA = FALSE, ...) {
 #' @param object An object of class `shapeNA`, usually from a call to
 #'     \code{\link{powerShape}} or similar functions.
 #' @param ... Further arguments to be passed to or from methods.
-# @param ... Further arguments, which will be ignored.
+#'
+#' @return A `summary.shapeNA` object. For objects of this class, the `print`
+#' method tries to format the location and shape estimate in a readable format
+#' and also shows the number of iterations, before the algorithm converged.
 #'
 #' @export
 #'
@@ -429,7 +443,7 @@ summary.shapeNA <- function(object, ...) {
 #' @param ... Further arguments to be passed to or from methods.
 # @param ... Further arguments, which will be ignored.
 #'
-#' @return Invisibly returns `NULL`.
+#' @return No return value.
 #'
 #' @export
 #'
@@ -439,7 +453,7 @@ summary.shapeNA <- function(object, ...) {
 print.summary.shapeNA <- function(x, ...) {
   cat('Call: ')
   print(x$call)
-  cat('---\nalpha:', x$alpha)
+  cat('---\nAlpha:', x$alpha)
   cat('\nCenter:\n')
   print(x$mu, digits=3)
   cat('\nShape:\n')
@@ -501,6 +515,7 @@ normalizationFunction <- function(normalization) {
 #'  \code{\link{powerShape}} and other functions from the same family.
 #'
 #' @return Scatter matrix estimate, or only `NA` if `alpha` = 1.
+#'
 #' @export
 #'
 #' @examples
@@ -519,73 +534,4 @@ shape2scatter <- function(obj) {
     return(NA)
   }
   return(obj$scale * obj$S)
-}
-
-#' Ellipse For Covariance Matrix From M-Estimator
-#'
-#' Given a `shapeNA` object, get (x,y)-coordinates of points, which for the
-#' estimated scatter (shape, if `alpha` == 1) and location have mahalanobis
-#' distance 1.
-#'
-#' @param obj A `shapeNA` object
-#' @param idx A vector of two distinct indices which specify the variables for
-#'     whose subspace a circle with mahalanobis distance 1 gets returned
-#' @param n number of points on the ellipse
-#'
-#' @keywords internal
-#'
-#' @examples
-#'     S <- toeplitz(c(1, 0.3, 0.7))
-#'     set.seed(123)
-#'     x <- mvtnorm::rmvt(100, S, df = 3)
-#'     obj <- powerShape(x, alpha = 0.85)
-#'     ## Plot variables 1 and 3
-#'     idx <- c(1,3)
-#'     plot(x[, idx])
-#'
-#'     ## Plot projection of true covariance matrix
-#'     lines(shapeNA:::ellipse(c(0, 0, 0), S, idx), col = 2)
-#'     ## Plot base-R estimate
-#'     lines(shapeNA:::ellipse(c(0, 0, 0), cov(x), idx), col = 3, lty = 2)
-#'     ## Plot M-estimate
-#'     lines(shapeNA:::ellipseShape(obj, idx=idx), col = 4, lty = 2)
-ellipseShape <- function(obj, idx=1:2, n = 250) {
-  S <- if (obj$alpha == 1) {
-    obj$S
-  } else {
-    shape2scatter(obj)
-  }
-  return(ellipse(obj$mu, S, idx, n))
-}
-
-#' Ellipse for Covariance Matrix
-#'
-#' Given a center and covariance, get (x,y)-coordinates of points, which have
-#' mahalanobis distance 1.
-#'
-#' @param mu A  vector for the ellipse's center
-#' @param S A covariance matrix
-#' @param idx A vector of two distinct indices which specify the variables for
-#'     whose subspace a circle with mahalanobis distance 1 gets returned
-#' @param n number of points on the ellipse
-#'
-#' @keywords internal
-#'
-#' @examples
-#'     S <- toeplitz(c(1, 0.3, 0.7))
-#'     x <- mvtnorm::rmvt(100, S, df = 3)
-#'
-#'     ## Plot variables 1 and 3
-#'     idx <- c(1,3)
-#'     plot(x[, idx])
-#'     ## Plot projection of true covariance matrix
-#'     lines(shapeNA:::ellipse(c(0, 0, 0), S, idx), col = 2)
-ellipse <- function(mu, S, idx, n = 250) {
-  t <- seq(0, 2*pi, length.out = n)
-  circle <- matrix(c(cos(t), sin(t)), ncol = 2)
-  X <- matrix(0, nrow = n, ncol = ncol(S))
-  X[, idx] <- circle
-  m <- sqrt(stats::mahalanobis(X, mu, S))
-  ell <- sweep(X, 1, m, FUN = '/')
-  return(ell[, idx])
 }

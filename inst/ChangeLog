@@ -1,4 +1,7 @@
 LOG of the CHANGES in the package shapeNA
 
+Version 0.0.2:
+* Update all exported functions to have their return values documented.
+
 Version 0.0.1:
 * First version

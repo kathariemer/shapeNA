@@ -14,6 +14,9 @@ variable is printed in the console.}
 
 \item{...}{Additional parameters passed to \code{\link[graphics]{image}}.}
 }
+\value{
+A matrix with the proportion of observed values for each variable.
+}
 \description{
 Function to visualize the shape matrix from objects of class \code{shapeNA} by
 plotting a heatmap where light colored cells indicate small values and dark

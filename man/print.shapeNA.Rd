@@ -11,6 +11,9 @@
 
 \item{...}{Additional parameters passed to lower level \code{\link[base]{print}}.}
 }
+\value{
+No return value.
+}
 \description{
 Prints the chosen value of \code{alpha} as well as the estimated shape and
 location for objects of class \code{shapeNA}.

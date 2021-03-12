@@ -12,7 +12,7 @@
 \item{...}{Further arguments to be passed to or from methods.}
 }
 \value{
-Invisibly returns \code{NULL}.
+No return value.
 }
 \description{
 Print Method for Class \code{summary.shapeNA}

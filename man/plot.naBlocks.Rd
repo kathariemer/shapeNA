@@ -11,6 +11,9 @@
 
 \item{...}{Additional parameters passed on to \code{\link[graphics]{rect}}.}
 }
+\value{
+No return value.
+}
 \description{
 Function to visualize the missingness patterns for objects of class \code{naBlocks}.
 }

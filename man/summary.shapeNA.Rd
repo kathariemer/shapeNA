@@ -12,6 +12,11 @@
 
 \item{...}{Further arguments to be passed to or from methods.}
 }
+\value{
+A \code{summary.shapeNA} object. For objects of this class, the \code{print}
+method tries to format the location and shape estimate in a readable format
+and also shows the number of iterations, before the algorithm converged.
+}
 \description{
 Summary methods for objects from class \code{shapeNA}.
 }

@@ -11,6 +11,9 @@
 
 \item{...}{Additional parameters passed to \code{\link[base]{print}}.}
 }
+\value{
+A named matrix representing the missingness pattern of the data.
+}
 \description{
 Print the pattern of missingness in the supplied data, as a block matrix.
 Observed data are represented by 1, missing values by 0.

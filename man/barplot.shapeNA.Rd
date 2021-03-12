@@ -15,6 +15,10 @@ Otherwise the variables are ordered from least to most missingness.}
 \item{...}{Additional graphical arguments passed to
 \code{\link[graphics]{barplot}}.}
 }
+\value{
+Invisibly returns a named vector holding the proportion of
+missingness per variable.
+}
 \description{
 Visualize the proportion of missingness per variable in a barplot.
 }
